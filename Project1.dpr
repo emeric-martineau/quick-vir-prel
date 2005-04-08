@@ -4,7 +4,9 @@ uses
   Forms,
   Unit1 in 'Unit1.pas' {Form1},
   XPTheme in 'XPTheme.pas',
-  apropos in 'apropos.pas' {FeuilleApropos};
+  apropos in 'apropos.pas' {FeuilleApropos},
+  AddModLine in 'AddModLine.pas' {AjouterModifierLigne},
+  UnitLicence in 'UnitLicence.pas' {Licence};
 
 {$R *.res}
 
