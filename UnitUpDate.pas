@@ -15,51 +15,56 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  *
  ******************************************************************************}
-unit apropos;
+unit UnitUpDate;
 
 interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, ShellAPI, jpeg;
+  Dialogs, StdCtrls, UnitUpdateThread ;
 
 type
-  TFeuilleApropos = class(TForm)
-    Shape1: TShape;
-    OK: TButton;
-    Label7: TLabel;
-    Label6: TLabel;
-    Label5: TLabel;
-    Label4: TLabel;
-    Label3: TLabel;
-    Label2: TLabel;
+  TUpdate = class(TForm)
     Label1: TLabel;
-    Image1: TImage;
-    procedure FormCreate(Sender: TObject);
-    procedure Label7Click(Sender: TObject);
+    Button1: TButton;
+    procedure Button1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Déclarations privées }
   public
     { Déclarations publiques }
+    procedure Fin ;
   end;
 
 var
-  FeuilleApropos: TFeuilleApropos;
-
+  Update: TUpdate;
+  FoundUpdateVersion : TFoundUpdateVersion ;
 implementation
 
 uses Unit1;
 
 {$R *.dfm}
 
-procedure TFeuilleApropos.FormCreate(Sender: TObject);
+procedure TUpdate.Button1Click(Sender: TObject);
 begin
-    Label1.Caption := Label1.Caption + Form1.GetVersionProgram ;
+    Close ;
 end;
 
-procedure TFeuilleApropos.Label7Click(Sender: TObject);
+procedure TUpdate.Fin ;
 begin
-    Form1.VisiterlesiteWebdeQuickVirPrel1Click(Sender) ;
+    if FoundUpdateVersion.NewVersion
+    then begin
+        Label1.Caption := 'Une nouvelle version est disponible' ;
+        Button1.Caption := 'OK' ;
+    end ;
+end ;
+
+procedure TUpdate.FormShow(Sender: TObject);
+begin
+    FoundUpdateVersion := TFoundUpdateVersion.Create(True) ;
+    FoundUpdateVersion.currentVersion := Form1.GetVersionProgram ;
+    FoundUpdateVersion.proc := Fin ;
+    FoundUpdateVersion.Suspended := False ;
 end;
 
 end.

@@ -6,7 +6,13 @@ uses
   XPTheme in 'XPTheme.pas',
   apropos in 'apropos.pas' {FeuilleApropos},
   AddModLine in 'AddModLine.pas' {AjouterModifierLigne},
-  UnitLicence in 'UnitLicence.pas' {Licence};
+  UnitLicence in 'UnitLicence.pas' {Licence},
+  UnitAjoutEmetteur in 'UnitAjoutEmetteur.pas' {AjoutEmetteur},
+  UnitEmetteur in 'UnitEmetteur.pas' {Emetteur},
+  UnitAjouterDestinataire in 'UnitAjouterDestinataire.pas' {AjoutDestinataire},
+  UnitDestinataire in 'UnitDestinataire.pas' {Destinataire},
+  UnitUpDate in 'UnitUpDate.pas' {Update},
+  UnitUpdateThread in 'UnitUpdateThread.pas';
 
 {$R *.res}
 

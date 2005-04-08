@@ -21,7 +21,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Mask ;
+  Dialogs, StdCtrls, Mask, UnitDestinataire ;
 
 type
   TAjouterModifierLigne = class(TForm)
@@ -39,11 +39,13 @@ type
     Label7: TLabel;
     ajouter: TButton;
     Button1: TButton;
+    ChargerDestinataireBouton: TButton;
     procedure ajouterClick(Sender: TObject);
     procedure Destinataire_RaisonSocialeKeyPress(Sender: TObject;
       var Key: Char);
     procedure Destinataire_MontantKeyPress(Sender: TObject; var Key: Char);
     procedure Destinataire_RaisonSocialeChange(Sender: TObject);
+    procedure ChargerDestinataireBoutonClick(Sender: TObject);
   private
     { Déclarations privées }
   public
@@ -60,14 +62,61 @@ uses Unit1;
 {$R *.dfm}
 
 procedure TAjouterModifierLigne.ajouterClick(Sender: TObject);
+    procedure MessageErreur(Texte : PChar) ;
+    begin
+        Application.MessageBox(Texte, 'Erreur', MB_OK + MB_ICONERROR) ;
+    end ;
 begin
     if Form1.CheckRIB(Destinataire_RIB.Text)
     then begin
-        Self.ModalResult := mrOK ;
+        if Destinataire_RaisonSociale.Text <> ''
+        then
+            if Destinataire_Montant.Text <> ''
+            then
+                if StrToFloat(Destinataire_Montant.Text) <> 0
+                then
+                    if Destinataire_Banque.Text <> ''
+                    then
+//                        if Destinataire_Reference.Text <> ''
+//                        then
+//                            if Destinataire_Libelle.Text <> ''
+//                            then
+                                Self.ModalResult := mrOK
+//                            else begin
+//                                MessageErreur('Veuillez saisir un libellé.') ;
+//                                Destinataire_Libelle.SetFocus ;
+//                            end
+//                        else begin
+//                            MessageErreur('Veuillez saisir une référence.') ;
+//                            Destinataire_Reference.SetFocus ;
+//                        end
+                    else begin
+                        MessageErreur('Veuillez saisir un nom de banque.') ;
+                        Destinataire_Banque.SetFocus ;
+                    end
+                else begin
+                    MessageErreur('Veuillez saisir un montant (autre que zéro).') ;
+                    Destinataire_Montant.SelectAll ;
+                    Destinataire_Montant.SetFocus ;
+                end
+            else begin
+                MessageErreur('Veuillez saisir un montant.') ;
+                Destinataire_Montant.SetFocus ;
+            end
+        else begin
+            MessageErreur('Veuillez saisir une raison sociale.') ;
+            Destinataire_RaisonSociale.SetFocus ;
+        end ;
     end
     else begin
-        Application.MessageBox('La clef RIB du destinataire que vous tentez d''ajouter est erronée. Vérifier la.', 'Erreur clef RIB', MB_OK + MB_ICONERROR) ;
+        MessageErreur('La clef RIB du destinataire que vous tentez d''ajouter est erronée. Vérifier la.') ;
+        Destinataire_RIB.SetFocus ;
     end ;
+
+    // Ajoute une virgule et 2 0 si y en a pas
+    if not Form1.CheckVirgule(Destinataire_Montant.Text)
+    then
+        Destinataire_Montant.Text := Destinataire_Montant.Text + ',00' ;
 end;
 
 {*******************************************************************************
@@ -217,5 +266,26 @@ begin
         TEdit(Sender).Text := temp ;
     end ;
 end;
+
+procedure TAjouterModifierLigne.ChargerDestinataireBoutonClick(
+  Sender: TObject);
+Var Destinataire : TDestinataire ;
+begin
+    Destinataire := TDestinataire.Create(Self);
+    Destinataire.Supprimer.Visible := False ;
+    Destinataire.Modifier.Visible := False ;
+    Destinataire.Ajouter.OnClick := nil ;
+    Destinataire.Ajouter.ModalResult := mrOK ;
+
+    if (Destinataire.ShowModal = mrOK) and (Destinataire.Destinataire_ListView1.Selected <> nil)
+    then begin
+        Destinataire_RaisonSociale.Text := Destinataire.Destinataire_ListView1.Selected.Caption ;
+        Destinataire_Banque.Text := Destinataire.Destinataire_ListView1.Selected.SubItems[0] ;
+        Destinataire_RIB.Text := Destinataire.Destinataire_ListView1.Selected.SubItems[1] ;
+    end ;
+
+    Destinataire.Free ;
+end;
+
 
 end.

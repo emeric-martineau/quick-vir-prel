@@ -2,9 +2,9 @@ object AjouterModifierLigne: TAjouterModifierLigne
   Left = 347
   Top = 184
   BorderStyle = bsDialog
-  Caption = 'AjouterModifierLigne'
+  Caption = 'Ligne'
   ClientHeight = 218
-  ClientWidth = 388
+  ClientWidth = 387
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -131,5 +131,14 @@ object AjouterModifierLigne: TAjouterModifierLigne
     Caption = 'Annuler'
     ModalResult = 2
     TabOrder = 7
+  end
+  object ChargerDestinataireBouton: TButton
+    Left = 144
+    Top = 187
+    Width = 137
+    Height = 25
+    Caption = 'Charger un destinataire'
+    TabOrder = 8
+    OnClick = ChargerDestinataireBoutonClick
   end
 end

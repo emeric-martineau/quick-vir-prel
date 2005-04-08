@@ -1,0 +1,53 @@
+unit UnitUpDate;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, UnitUpdateThread ;
+
+type
+  TUpdate = class(TForm)
+    Label1: TLabel;
+    Button1: TButton;
+    procedure Button1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+  private
+    { Déclarations privées }
+  public
+    { Déclarations publiques }
+    procedure Fin ;
+  end;
+
+var
+  Update: TUpdate;
+  FoundUpdateVersion : TFoundUpdateVersion ;
+implementation
+
+uses Unit1;
+
+{$R *.dfm}
+
+procedure TUpdate.Button1Click(Sender: TObject);
+begin
+    Close ;
+end;
+
+procedure TUpdate.Fin ;
+begin
+    if FoundUpdateVersion.NewVersion
+    then begin
+        Label1.Caption := 'Une nouvelle version est disponible' ;
+        Button1.Caption := 'OK' ;
+    end ;
+end ;
+
+procedure TUpdate.FormShow(Sender: TObject);
+begin
+    FoundUpdateVersion := TFoundUpdateVersion.Create(True) ;
+    FoundUpdateVersion.currentVersion := Form1.GetVersionProgram ;
+    FoundUpdateVersion.proc := Fin ;
+    FoundUpdateVersion.Suspended := False ;
+end;
+
+end.

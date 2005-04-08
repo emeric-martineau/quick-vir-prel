@@ -1,6 +1,6 @@
 [Setup]
 AppName=QuickVirPrel
-AppVerName=QuickVirPrel 1.0
+AppVerName=QuickVirPrel 2.0
 DefaultDirName={pf}\QuickVirPrel
 DefaultGroupName=QuickVirPrel
 UninstallDisplayIcon={uninstallexe}
@@ -15,6 +15,7 @@ Name: "fr"; MessagesFile: "compiler:French.isl"
 [Files]
 Source: "project1.exe"; DestDir: "{app}"; DestName: "QuickVirPrel.exe"
 Source: "licence.rtf"; DestDir: "{app}"
+Source: "historique.txt"; DestDir: "{app}"
 
 [Icons]
 Name: "{group}\QuickVirPrel"; Filename: "{app}\QuickVirPrel.exe"; WorkingDir: "{app}"

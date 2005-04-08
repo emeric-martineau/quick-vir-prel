@@ -1,0 +1,16 @@
+	d=NumBank*8;
+	NumBank=d/97;
+	NumBank = d-( NumBank * 97);
+	e=NumAgenceBank*15;
+	NumAgenceBank=e/97;
+	NumAgenceBank=97-(e-(NumAgenceBank*97));
+	f=3*NumCompte;
+	NumCompte=f/97;
+	NumCompte=97-(f-(NumCompte*97));
+	g=NumBank+NumAgenceBank+NumCompte;
+	h=g/97;
+	i=g-(h*97);
+	if (i==0)
+	{
+		i=97;
+	}

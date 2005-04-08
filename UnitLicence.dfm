@@ -1,6 +1,6 @@
 object Licence: TLicence
-  Left = 301
-  Top = 205
+  Left = 330
+  Top = 126
   Width = 431
   Height = 480
   Caption = 'Licence'
@@ -32,6 +32,7 @@ object Licence: TLicence
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 0
+    OnKeyDown = RichEdit1KeyDown
   end
   object Panel1: TPanel
     Left = 0

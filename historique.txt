@@ -1,0 +1,34 @@
+HISTORIQUE DES VERSIONS DE QUICKVIRPREL
+=======================================
+version 2.0 : (23/06/2005)
+  - Mémorisation de plusieurs émetteurs,
+  - Mémorisation de plusieurs destinataires
+  - Possibilité d'ouvrir des fichiers de virement et de les modifier,
+  - Ouverture des fichiers possible par le menu Fichier -> Ouvrir, par la barre d'outil, la ligne de commande ou le Drag&Dop (possibilité de multi fichier pour ce dernier)
+  - Amélioration des vérifications des données saisies,
+  - Correction d'un problème de calcule dans la clef RIB si le numéro de compte était trop grand,
+  - Amélioration de l'impression,
+  - Renomage du menu Divers par Outils,
+  - Nouvelle barre d'outil,
+  - Regroupement des menus enregistrés dans la même boite de dialogue (type de fichier),
+  - Ajout du menu Enregistrer sous,
+  - Correction des activations/désactivations des menus suivant le contexte,
+  - Correction du problème de double clique sur la liste des enregistrements lorsque celle-ci était vide,
+  - Amélioration de la demande d'enregistrement lorsqu'on quitte le programme ou que l'on fait nouveau,
+  - Correction du problème qui lorsqu'on enregistrait le fichier et qu'il y avait un problème, indique quand même que le fichier était enregistré,
+  - Ajout du nom du fichier en cours dans la barre de titre,
+  - Possibilité de trier les listes,
+  - Affichage d'un assistant au démarage si pas d'émetteur connu,
+  - Vérification lors de l'ajout d'un émetteur que le RIB n'est pas déjà connu,
+  - Vérification d'une nouvelle version disponible,
+  - Alignement à droite des chiffres pour une meilleur lisibilité,
+  - Suppression de l'obligation de saisir un n° de virement et des références,
+  - Ajouter ,00 si pas de virgule pour meilleur lisibilité,
+  - Enregistrement des tailles des colonnes,
+  - Correction d'un bug qui tronquait la première lettre de chaque ligne,
+  - Mémorisation des tailles et positions des fenêtres,
+  - Correction d'un bug qui allouait de la mémoire sans jamais la libérer,
+  - Rajout du signe euro sur les lignes du fichiers.
+
+
+Version 1.0 : (09/04/2005) version initiale

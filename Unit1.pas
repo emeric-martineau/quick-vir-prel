@@ -17,32 +17,37 @@
  ******************************************************************************}
 {*
  * TODO :
- *       - Fichier -> Imprimer
- *       - Créer un menu Aide, avec licence, et apropos de ...
  *       - pouvoir réduire en systray [inutile]
  *       - popup menu sur liste [inutile]
+ *       - Drag&Drop aussi intégrer la liste de ce qui se trouve dans le fichier [annulé]
+ *       - multi modification [annulé]
  *
  *
- *       Version 1.2
- *       - N'avoir plus qu'un menu enregistrer, mais en type de fichier, dans la boite de dialogue permettre de choisir
- *         l'un des trois type.
- *       - Modifier la MessageBox qui signale qu'il y a des modif et que le fichier n'a pas été enregistré.
- *         Boutons : oui, non, annuler
- *                   Oui : Affiche la boite d'enregistrement
- *                   Non : fait l'action voulu
- *                   Annuler : annule tout  
- *       - Changer l'icone du programme par les clefs
- *       - Refaire la boite de dialogue A propos de ...
- *       - nouvelle barre d'outil
- *       - configuration barre d'outil
- *       - Mémorisation de plusieurs destinataire
- *       - Fichier -> Ouvrir
- *       - Ouvrir avec fichier en paramètre
- *       - Drag&Drop ouvre le fichier
- *       - Drag&Drop aussi intégrer la liste de ce qui se trouve dans le fichier
- *       - multi modification
- *       - Fichier -> Exporter (en CVS, excel...)
+ *
+ *
+ *       Version 2.1
+ *       - Demander si on veut imprimer lorsqu'on a enregistrer un fichier (Configurable)
+ *       - Pouvoir réinitialiser la config par défaut
+ *       - pouvoir réinitiliser les paramètres par la lignes de commandes ou pouvoir lancer le panneau de configuration 
+ *       - Exportation HTML, XHTML, XML, CVS, Excel, Word, Texte (comme l'impression)
+ *       - Export/Import Emetteur, Destinataire dans un fichier ini pour pouvoir balader les infos
+ *       - configuration de la barre d'outil
+ *       - pouvoir configurer la vérification d'émetteur présent dans la base de registre au démarrage
+ *       - pouvoir configurer où sont enregistrer les informations Emetteur/Destinataire :
+ *             Information propre à chaque utilisateur (HKCU)
+ *             Information commun à tous les utilisateurs de cet ordinateur (HKLM)
+ *       - mémoriser taille et position des fenêtres (pouvoir configurer que non)
+ *       - Mémoriser taille des colones
+ *       - faire un outil pour calculer les clefs RIB
+ *       - possibilité de charger un émetteur autre à partir d'un émetteur connu
  *       - gérer un apperçu avant impression
+ *       - pouvoir afficher une grille ListView1.GridLines := TRue ;
+ *       - ListView1.HotTrak & HotTrackStyles, ListView1.FullDrag
+ *       - Désactiver vérifiaction RIB
+ * 
+ *
+ *       Version 1.4
+ *       - Faire une version en réseau
  *}
 {
     A FAIRE :
@@ -61,7 +66,7 @@
               - Convertir en majuscule les saisie [OK]
               - A propos de : faire la boite de dialogue [OK]
 
-              V1.1
+              V1.0
               - Modifier : ne gérer qu'une ligne [OK]
               - Si double clique sur une ligne, modifie [OK]
               - recharger les infos de la base de registre [OK]
@@ -73,7 +78,52 @@
               - optimiser [OK]
               - Lignes -> Copier, Couper, Coller [OK]
               - Réinitialiser la police [OK]
+              - Fichier -> Imprimer
+              - Créer un menu Aide, avec licence, et apropos de ...
 
+              V2.0
+              - Refaire la boite de dialogue A propos de ...
+              - Modifier l'impression pour avoir des saut de ligne avant et après le tableau
+              - Renommer menu Divers par Outils
+              - Changer l'icone du programme par les clefs
+              - nouvelle barre d'outil
+              - N'avoir plus qu'un menu enregistrer, mais en type de fichier, dans la boite de dialogue permettre de choisir
+                l'un des trois type.
+              - Enregistrer sous donc mémoriser le nom, le type d'opération  
+              - Modif et activation désactivation bouton et menu enregistrer
+              - Amélioration des activations/désactivation des menus
+              - Correction du bug quand double clique quand la liste est vide.
+              - Ammélioration de la présentation de la barre d'outil
+              - Utilisation de la propriété DefaultExt de la Boite de dialogue e sauvegarde
+             - Modifier la MessageBox qui signale qu'il y a des modif et que le fichier n'a pas été enregistré.
+               Boutons : oui, non, annuler
+                         Oui : Affiche la boite d'enregistrement
+                         Non : fait l'action voulu
+                         Annuler : annule tout
+             - Ajouter/Modifier ligne vérifier montant
+             - Quand une erreur survient lors de l'enregistrement, modif est mis à true. Mettre à false
+             - Dans la Caption de la feuille mettre le nom du fichier
+             - Ajout du menu Aide -> Visitez le site web de QuickVirPrel
+             - Menu Aide -> Historique de versions
+             - Trie des colones dans la listes Emetteur
+             - Afficher un assistant si pas de destinataire existant au démarrage
+             - Correction du bug de calcule de la clef RIB
+             - Vérifier lors de l'ajout d'un émetteur qu'il n'existe pas (par le RIB)
+             - Mémorisation de plusieurs émetteurs -> bouton autre
+             - Fichier -> Ouvrir
+             - Ouvrir avec fichier en paramètre
+             - Drag&Drop ouvre le ou les fichier(s)
+             - gestion liste des destinataires
+             - historique des versions
+             - vérification d'une nouvelle version disponible
+             - alignement à droite des chiffre
+             - suppression de l'obligation de saisir un n° de virement et des références
+             - ajouter ,00 si pas de virgule pour meilleur lisibilité
+             - Enregistrement des tailles des colonnes
+             - correction d'un bug qui tronquait la première lettre de chaque ligne
+             - mémoriser taille fenêtre
+             - correction d'un bug qui empêchait les fenêtres de se détruire
+             - rajout du signe euro sur les lignes du fichiers
     A TERMINER :
 
 }
@@ -84,7 +134,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, StdCtrls, DateUtils, ExtCtrls, Buttons, Mask, Menus, Registry,
-  apropos, AddModLine, ToolWin, ImgList, Printers, ShellAPI, UnitLicence ;
+  apropos, AddModLine, ToolWin, ImgList, Printers, ShellAPI, UnitLicence, UnitAjoutEmetteur,
+  UnitEmetteur, StrUtils, UnitAjouterDestinataire, UnitDestinataire, UnitUpDate ;
 
 type
   TForm1 = class(TForm)
@@ -93,10 +144,7 @@ type
     Lignes1: TMenuItem;
     Divres1: TMenuItem;
     Nouveau1: TMenuItem;
-    N1: TMenuItem;
-    Enregistrerprlvement1: TMenuItem;
-    Enregistrerprlvementacclr1: TMenuItem;
-    Enregistrervirement1: TMenuItem;
+    Enregistrer1: TMenuItem;
     N2: TMenuItem;
     Quitter1: TMenuItem;
     Supprimer1: TMenuItem;
@@ -106,50 +154,22 @@ type
     N4: TMenuItem;
     outslectionner1: TMenuItem;
     Inverserlaslection1: TMenuItem;
-    Effacerlesinformationsinscritentdanslabasederegistre1: TMenuItem;
     SaveDialog1: TSaveDialog;
     Ajouter1: TMenuItem;
     ToolBar1: TToolBar;
-    GroupBox1: TGroupBox;
-    Label1: TLabel;
-    Label9: TLabel;
-    Label10: TLabel;
-    Label11: TLabel;
-    Label12: TLabel;
-    Emetteur_RaisonSociale: TEdit;
-    GroupBox3: TGroupBox;
-    Label2: TLabel;
-    Label3: TLabel;
-    Label4: TLabel;
-    Label5: TLabel;
-    Emetteur_Banque: TEdit;
-    SouvenirEmetteur: TCheckBox;
-    Emetteur_RIB: TMaskEdit;
-    Emetteur_NumPrelevement: TMaskEdit;
-    Emetteur_NumVirement: TMaskEdit;
-    RefferenceEmission: TEdit;
-    ComboBox1: TComboBox;
-    ComboBox2: TComboBox;
-    ComboBox3: TComboBox;
-    ImageList1: TImageList;
-    ToolButton1: TToolButton;
+    Enregistrer: TToolButton;
     ToolButton2: TToolButton;
-    ToolButton3: TToolButton;
-    ToolButton4: TToolButton;
-    ToolButton5: TToolButton;
-    PopupMenu1: TPopupMenu;
-    Enregistrerprlvement2: TMenuItem;
-    Enregistrerprlvementacclr2: TMenuItem;
-    Enregistrervirement2: TMenuItem;
-    Rechargerlesinformationsmmorisesdelmetteur1: TMenuItem;
+    NouvelleLigne: TToolButton;
+    EditerLigne: TToolButton;
+    SupprimerLigne: TToolButton;
     N3: TMenuItem;
     Copier1: TMenuItem;
     Couper1: TMenuItem;
     Coller1: TMenuItem;
     ToolButton6: TToolButton;
-    ToolButton7: TToolButton;
-    ToolButton8: TToolButton;
-    ToolButton9: TToolButton;
+    Copier: TToolButton;
+    Coller: TToolButton;
+    Couper: TToolButton;
     N6: TMenuItem;
     Imprimer1: TMenuItem;
     PrintDialog1: TPrintDialog;
@@ -157,30 +177,57 @@ type
     Configurerlimpression1: TMenuItem;
     Configurerpolicedimpression1: TMenuItem;
     FontDialog1: TFontDialog;
-    N7: TMenuItem;
     Rinitialiserlapolicedimpression1: TMenuItem;
     Aide1: TMenuItem;
     Licence1: TMenuItem;
     N8: TMenuItem;
+    Nouveau: TToolButton;
+    Ouvrir: TToolButton;
+    Imprimer: TToolButton;
+    ToolButton11: TToolButton;
+    ImageList2: TImageList;
+    Police: TToolButton;
+    Enregistrersous1: TMenuItem;
+    Emetteur1: TMenuItem;
+    Ajout1: TMenuItem;
+    Modifier2: TMenuItem;
+    Supprimer2: TMenuItem;
+    VisiterlesiteWebdeQuickVirPrel1: TMenuItem;
+    Historiquedesversions1: TMenuItem;
+    N1: TMenuItem;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Label9: TLabel;
+    RefferenceEmission: TEdit;
+    Label10: TLabel;
+    ComboBox1: TComboBox;
+    Label11: TLabel;
+    ComboBox2: TComboBox;
+    Label12: TLabel;
+    ComboBox3: TComboBox;
+    ListeEmetteurComboBox: TComboBox;
+    Label1: TLabel;
+    ConfigurerEmetteurAutre: TButton;
+    OpenDialog1: TOpenDialog;
+    Ouvrir1: TMenuItem;
+    Destinataire1: TMenuItem;
+    Ajouter2: TMenuItem;
+    Modifier3: TMenuItem;
+    Supprimer3: TMenuItem;
+    Vrifiersinouvelleversiondisponibl1: TMenuItem;
     procedure ajouterClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ComboBox2Change(Sender: TObject);
     procedure Supprimer1Click(Sender: TObject);
     procedure Lignes1Click(Sender: TObject);
-    procedure SouvenirEmetteurClick(Sender: TObject);
     procedure outslectionner1Click(Sender: TObject);
     procedure Inverserlaslection1Click(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure Quitter1Click(Sender: TObject);
     procedure Nouveau1Click(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure Effacerlesinformationsinscritentdanslabasederegistre1Click(
-      Sender: TObject);
     procedure Emetteur_RaisonSocialeKeyPress(Sender: TObject;
       var Key: Char);
-    procedure Enregistrerprlvement1Click(Sender: TObject);
-    procedure Enregistrerprlvementacclr1Click(Sender: TObject);
-    procedure Enregistrervirement1Click(Sender: TObject);
+    procedure Enregistrer1Click(Sender: TObject);
     procedure Aproposde1Click(Sender: TObject);
     procedure ListView1Enter(Sender: TObject);
     procedure ListView1Exit(Sender: TObject);
@@ -199,21 +246,74 @@ type
     procedure Configurerpolicedimpression1Click(Sender: TObject);
     procedure Rinitialiserlapolicedimpression1Click(Sender: TObject);
     procedure Licence1Click(Sender: TObject);
+    procedure Enregistrersous1Click(Sender: TObject);
+    procedure EmetteurAjout1Click(Sender: TObject);
+    procedure VisiterlesiteWebdeQuickVirPrel1Click(Sender: TObject);
+    procedure Historiquedesversions1Click(Sender: TObject);
+    procedure EmetteurModifier2Click(Sender: TObject);
+    procedure Panel1Resize(Sender: TObject);
+    procedure ListeEmetteurComboBoxChange(Sender: TObject);
+    procedure ConfigurerEmetteurAutreClick(Sender: TObject);
+    procedure Ouvrir1Click(Sender: TObject);
+    procedure Ajouter2Click(Sender: TObject);
+    procedure Modifier3Click(Sender: TObject);
+    procedure Vrifiersinouvelleversiondisponibl1Click(Sender: TObject);
+//    procedure OnMessage(var Msg: tagMSG; var Handled: Boolean);
   private
     { Déclarations privées }
     Modif : Boolean ;
+    SaveDialogExitState : Boolean ;
+    EmetteurRaisonSocialeAutre : String ;
+    EmetteurRIBAutre : String ;
+    EmetteurNumeroAutre : String ;
+//    OldWindowProc: TWndMethod;
     function ExtraireClefRIB(RIB : String) : ShortInt ;
     function CalculerClefRIB(RIB : String) : ShortInt ;
     function Valeur(Caractere : Char) : Char ;
     function StrNCopyNWithValeur(debut : Integer; fin : integer; chaine : String) : String ;
-    procedure Save(Ligne1 : String; Ligne2 : String; Ligne3 : String; Ref : String) ;
+    function Save(Ligne1 : String; Ligne2 : String; Ligne3 : String; Ref : String) : Integer ;
     procedure LoadRegistry ;
     function Completer(Texte : String; longueur : Integer) : String ;
-    procedure Supprimer ;        
+    procedure Supprimer ;
+    procedure LireEmetteur ;
+    procedure Wizard ;
+    procedure SetModif(Valeur : Boolean) ;
+    procedure EnregistrerLeFichier ;
+    procedure MiseAJourListeEmetteurComboBox ;
+    function StrNCopyN(debut, fin : Integer; texte : String) : String ;
+    function ExtraireLigne(ligne : String) : Boolean ;
+    function ExtrairePremiereLigne(ligne : String) : Boolean ;
+    function ExtraireLigneDestinataire(ligne : String) : Boolean ;
+    procedure OuvrirUnFichier ;
+    procedure LireDestinataire ;
+    function NouveauFichier : Boolean ;
+//    Procedure NewWindowProc(var Msg: TMessage);
+//    procedure NewResizedProc(var msg:TMessage); message WM_SIZE;
   public
     { Déclarations publiques }
+    // Emetteur
+    ListeEmetteurRaisonSociale : TStringList ;
+    ListeEmetteurRIB : TStringList ;
+    ListeEmetteurNumeroVirement : TStringList ;
+    ListeEmetteurNumeroPrelevement : TStringList ;
+    ListeEmetteurNomBanque : TStringList ;
+    // Destinataire
+    ListeDestinataireRaisonSociale : TStringList ;
+    ListeDestinataireRIB : TStringList ;
+    ListeDestinataireNomBanque : TStringList ;
+    // Fonctions
     function CheckRIB(RIB : String) : Boolean ;
     function CheckVirgule(chaine : string) : boolean ;
+    procedure MiseAjourRegistreEmetteur ;
+    procedure MiseAjourRegistreDestinataire ;    
+    procedure SauveEmetteurRegistre(Num : Integer; RaisonSocial : String; RIB : String; NumVirement : String; NumPrelevement : String; NomBanque : String; UpdateNB : boolean) ;
+    procedure SauveDestinataireRegistre(Num : Integer; RaisonSocial : String; RIB : String; NomBanque : String; UpdateNB : boolean) ;
+    procedure WMDropFiles(var Msg: TWMDropFiles); message WM_DROPFILES;
+    function  GetVersionProgram : String ;
+    procedure GetListViewColumnWidth(ListView : TListView) ;
+    procedure SetListViewColumnWidth(ListView : TListView) ;
+    procedure SetWindowProperties(Fenetre : TForm) ;
+    procedure GetWindowProperties(Fenetre : TForm) ;
   end;
 
 var
@@ -222,7 +322,7 @@ var
 Const
   TEXTE_SAUVEGARDE_AVANT : PChar = 'Vous n''avez pas enregistré les modifications ! Souhaitez-vous les enregistrer ?' ;
   TITRE_SAUVEGARDE_AVANT : PChar = 'Modification' ;
-  OPTION_SAUVEGARDE_AVANT : Integer = MB_YESNO + MB_ICONQUESTION ;
+  OPTION_SAUVEGARDE_AVANT : Integer = MB_YESNOCANCEL + MB_ICONWARNING ;
   CHEMIN_REGISTRE = 'Software\QuickVirPrel' ;
 implementation
 
@@ -255,8 +355,10 @@ begin
         ListView1.SetFocus ;
 
         // Indique qu'il y a eu modification
-        Modif := True ;
+        SetModif(True) ;
     end ;
+
+    AjouterModifierLigne.Free ;
 end;
 
 {*******************************************************************************
@@ -265,7 +367,11 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 Var i : Word ;
     CurYear : Word ;
+    temp : String ;
 begin
+    // Charge l'icone de la main de Windows plutôt que de delphi
+    Screen.Cursors[crHandPoint] := LoadCursor(0, IDC_HAND);
+
     // Liste les années possibles à partir de l'année en cours
     CurYear := CurrentYear ;
 
@@ -283,9 +389,58 @@ begin
     ComboBox1.ItemIndex := DayOf(Now) - 1 ;
 
     // Pas de modif effectué
-    Modif := False ;
+    SetModif(False) ;
 
     LoadRegistry ;
+
+    // Simule une suppression pour désactiver certains éléments
+    Supprimer ;
+
+    // Initialise la variable
+    SaveDialogExitState := True ;
+
+    // Lit les émetteur enregistré
+    LireEmetteur ;
+
+    // Lit les émetteur enregistré
+    LireDestinataire ;
+
+    // Met à jour la liste des émetteurs dans la combobox
+    MiseAJourListeEmetteurComboBox ;
+
+    // Si on à un paramètre, c'est qu'on doit ouvrir un fichier
+    case ParamCount of
+        0 : ;
+        1 : begin//ParamStr(1)
+                temp := ParamStr(1) ;
+
+                if FileExists(temp)
+                then begin
+                    OpenDialog1.FileName := temp ;
+                    OuvrirUnFichier ;
+                end
+                else
+                    Application.MessageBox(PChar('Le fichier ' + temp + ' est introuvable.'), 'Erreur d''ouverture de fichier', MB_OK + MB_ICONERROR) ;
+            end ;
+        else
+            Application.MessageBox('Trop de paramètre en ligne de commande.' + #13 + #10 + 'QuickVirPrel.exe <le fichier à ouvrir>.', 'Erreur de ligne de commande', MB_OK + MB_ICONERROR) ;
+    end ;
+
+    // Indique que l'on peut faire du drag&drop sur la feuille
+    DragAcceptFiles(Self.Handle,true);
+
+    GetListViewColumnWidth(ListView1) ;
+
+    GetWindowProperties(Self) ;
+
+(*
+    Application.OnMessage := OnMessage;
+
+    // Sauvegarde la WndProc actuelle du DBGrid1.
+    OldWindowProc := WindowProc;
+    // Affecte une nouvelle procédure de fenêtre.
+    WindowProc := NewWindowProc;
+*)
 end;
 
 {*******************************************************************************
@@ -378,10 +533,11 @@ begin
         ListView1.SetFocus ;
     end
     else begin
-        ToolButton5.Enabled := False ;
-        ToolButton4.Enabled := False ;
-        ToolButton7.Enabled := False ;
-        ToolButton9.Enabled := False ;
+        SupprimerLigne.Enabled := False ;
+        EditerLigne.Enabled := False ;
+        Copier.Enabled := False ;
+        Couper.Enabled := False ;
+        ListView1.ItemIndex := -1 ;
     end ;
 end;
 
@@ -394,10 +550,14 @@ begin
     then begin
         Supprimer1.Enabled := True ;
         Modifier1.Enabled := True ;
+        Copier1.Enabled := True ;
+        Couper1.Enabled := True ;
     end
     else begin
         Supprimer1.Enabled := False ;
         Modifier1.Enabled := False ;
+        Copier1.Enabled := False ;
+        Couper1.Enabled := False ;
     end ;
 
     if ListView1.Items.Count > 0
@@ -407,18 +567,8 @@ begin
     end
     else begin
         outslectionner1.Enabled := False ;
-        Inverserlaslection1.Enabled := False ;    
+        Inverserlaslection1.Enabled := False ;
     end ;
-end;
-
-{*******************************************************************************
- * Affiche un message d'avertissement si on coche se souvenir des infos
- ******************************************************************************}
-procedure TForm1.SouvenirEmetteurClick(Sender: TObject);
-begin
-    if SouvenirEmetteur.Checked = True
-    then
-        Application.MessageBox('Les informations bancaires de l''émetteur sont enregistrées dans la base de registre. Si la sécurité est mal définie, quelqu''un pourra y accèder.', 'Attention', MB_OK + MB_ICONWARNING) ;
 end;
 
 {*******************************************************************************
@@ -485,7 +635,8 @@ end ;
 function TForm1.CalculerClefRIB(RIB : String) : ShortInt ;
 Var Banque, Guichet : Integer ;
     Compte : Int64 ;
-    a,c,d,e : Integer ;
+    a,d,e : Integer ;
+    c : Int64 ;
 begin
     Banque := StrToInt(StrNCopyNWithValeur(1, 5, RIB)) ;
     Guichet := StrToInt(StrNCopyNWithValeur(7, 11, RIB)) ;
@@ -580,10 +731,19 @@ procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
     if Modif = True
     then begin
-         if Application.MessageBox(TEXTE_SAUVEGARDE_AVANT, TITRE_SAUVEGARDE_AVANT, OPTION_SAUVEGARDE_AVANT) = ID_YES
-         then begin
-             CanClose := False ;
+         case Application.MessageBox(TEXTE_SAUVEGARDE_AVANT, TITRE_SAUVEGARDE_AVANT, OPTION_SAUVEGARDE_AVANT) of
+             ID_CANCEL : CanClose := False ;
+             ID_YES : begin
+                          Enregistrer1Click(Sender) ;
+                          CanClose := SaveDialogExitState ;
+                      end ;
          end ;
+    end ;
+
+    if CanClose = True
+    then begin
+        SetListViewColumnWidth(ListView1) ;
+        SetWindowProperties(Self) ;
     end ;
 end;
 
@@ -599,77 +759,34 @@ end;
  * Si on clique sur nouveau
  ******************************************************************************}
 procedure TForm1.Nouveau1Click(Sender: TObject);
+begin
+    NouveauFichier ;
+end;
 
+{*******************************************************************************
+ * Nouveau fichier
+ ******************************************************************************}
+function TForm1.NouveauFichier : Boolean ;
     procedure nouveauInterne ;
     begin
         ListView1.Clear ;
-        Modif := False ;
+        SetModif(False) ;
+        Form1.Caption := 'QuickVirPrel [Sans nom]' ;
     end ;
 begin
+    Result := True ;
+    
     if Modif = True
     then begin
-         if Application.MessageBox(TEXTE_SAUVEGARDE_AVANT, TITRE_SAUVEGARDE_AVANT, OPTION_SAUVEGARDE_AVANT) = ID_NO
-         then begin
-             nouveauInterne ;
+         case Application.MessageBox(TEXTE_SAUVEGARDE_AVANT, TITRE_SAUVEGARDE_AVANT, OPTION_SAUVEGARDE_AVANT) of
+             ID_NO : nouveauInterne ;
+             ID_YES : Enregistrer1Click(Self) ;
+             else
+                 Result := False ; 
          end ;
     end
     else begin
         nouveauInterne ;
-    end ;
-
-end;
-
-{*******************************************************************************
- * Enregistre les informations si voulue
- ******************************************************************************}
-procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
-Var Registre : TRegistry ;
-begin
-    if SouvenirEmetteur.Checked
-    then begin
-        Registre := TRegistry.Create ;
-
-        try
-            { Lancer au démarrage de l'ordi }
-            Registre.RootKey := HKEY_CURRENT_USER ;
-            Registre.OpenKey(CHEMIN_REGISTRE, True) ;
-
-            Registre.WriteString('Emetteur_RaisonSociale', Emetteur_RaisonSociale.Text);
-            Registre.WriteString('Emetteur_NumPrelevement', Emetteur_NumPrelevement.Text);
-            Registre.WriteString('Emetteur_NumVirement', Emetteur_NumVirement.Text);
-            Registre.WriteString('Emetteur_Banque', Emetteur_Banque.Text);
-            Registre.WriteString('Emetteur_RIB', Emetteur_RIB.Text);
-
-            Registre.CloseKey ;
-        finally
-            Registre.Free ;
-        end ;
-    end ;
-end;
-
-{*******************************************************************************
- * Efface les infos dans la base de registre
- ******************************************************************************}
-procedure TForm1.Effacerlesinformationsinscritentdanslabasederegistre1Click(
-  Sender: TObject);
-Var Registre : TRegistry ;
-begin
-    Registre := TRegistry.Create ;
-
-    try
-        { Lancer au démarrage de l'ordi }
-        Registre.RootKey := HKEY_CURRENT_USER ;
-        Registre.OpenKey(CHEMIN_REGISTRE, True) ;
-
-        Registre.DeleteValue('Emetteur_RaisonSociale');
-        Registre.DeleteValue('Emetteur_NumPrelevement');
-        Registre.DeleteValue('Emetteur_NumVirement');
-        Registre.DeleteValue('Emetteur_Banque');
-        Registre.DeleteValue('Emetteur_RIB');
-
-        Registre.CloseKey ;
-    finally
-        Registre.Free ;
     end ;
 end;
 
@@ -723,11 +840,12 @@ end ;
 {*******************************************************************************
  * Enregistre les données
  ******************************************************************************}
-procedure TForm1.Save(Ligne1 : String; Ligne2 : String; Ligne3 : String; Ref : String) ;
+function TForm1.Save(Ligne1 : String; Ligne2 : String; Ligne3 : String; Ref : String) : Integer ;
 Var Fichier : TextFile ;
     Banque, Guichet, Compte : String ;
     i : Integer ;
     Total : Extended ;
+    RS, RIB : String ;
 
     function DateAFB : String ;
     Var temp : String ;
@@ -743,7 +861,7 @@ Var Fichier : TextFile ;
 
         Result := Result + temp ;
 
-        Result := Result + ComboBox3.Text[4] ; 
+        Result := Result + ComboBox3.Text[4] ;
     end ;
 
     Function CompleterMontant(Texte : String) : String ;
@@ -770,84 +888,66 @@ Var Fichier : TextFile ;
     end ;
 
 Begin
-    if CheckRIB(Emetteur_RIB.Text)
+    Result := -1 ;
+
+    if ListeEmetteurComboBox.Text = 'Autre...'
     then begin
-        if SaveDialog1.Execute
-        then begin
-            // Vérifie si l'extention est mise
-            if ExtractFileExt(SaveDialog1.FileName) = ''
-            then
-                SaveDialog1.FileName := SaveDialog1.FileName + '.txt' ;
-
-            Banque := StrNCopyNWithValeur(1, 5, Emetteur_RIB.Text) ;
-            Guichet := StrNCopyNWithValeur(7, 11, Emetteur_RIB.Text) ;
-            Compte := StrNCopyNWithValeur(13, 23, Emetteur_RIB.Text) ;
-
-            Total := 0 ;
-
-            FileMode := fmOpenWrite ;
-            AssignFile(Fichier, SaveDialog1.FileName); { Fichier sélectionné dans la boîte de dialogue }
-            Rewrite(Fichier);
-
-            try
-                // Première ligne
-                WriteLn(Fichier, Ligne1 + '        ' + Ref + '       ' + DateAFB + Completer(Emetteur_RaisonSociale.Text, 24) + Completer(RefferenceEmission.Text, 11) + '               E     ' + Guichet + Compte + '                                               ' + Banque + '      ') ;
-
-                // Lignes
-                For i := 0 to ListView1.Items.Count -1 do
-                begin
-                    Banque := StrNCopyNWithValeur(1, 5, ListView1.Items[i].SubItems[0]) ;
-                    Guichet := StrNCopyNWithValeur(7, 11, ListView1.Items[i].SubItems[0]) ;
-                    Compte := StrNCopyNWithValeur(13, 23, ListView1.Items[i].SubItems[0]) ;
-
-                    Total := Total + StrToFloat(ListView1.Items[i].SubItems[2]) ;
-
-                    WriteLn(Fichier, Ligne2 + '        ' + Ref + Completer(ListView1.Items[i].SubItems[3], 12) + Completer(ListView1.Items[i].Caption ,24) + Completer(ListView1.Items[i].SubItems[1], 20) + '            ' + Guichet + Compte + CompleterMontant(ListView1.Items[i].SubItems[2]) + Completer(ListView1.Items[i].SubItems[4], 31) + Banque + '      ') ;
-                end ;
-
-                // Avant dernière ligne
-                WriteLn(Fichier, Ligne3 + '        ' + Ref + '                                                                                    ' + CompleterMontant(FloatToStr(Total)) + '                                          ') ;
-            finally
-                CloseFile(Fichier);
-            end ;            
-        end ;
+        RIB := EmetteurRIBAutre ;
+        RS := EmetteurRaisonSocialeAutre ;
     end
-    else
-        Application.MessageBox('La clef RIB de l''émetteur que vous tentez d''ajouter est erronée. Vérifier la.', 'Erreur clef RIB', MB_OK + MB_ICONERROR) ;
+    else begin
+        RIB := ListeEmetteurComboBox.Text ;
+        RS := ListeEmetteurRaisonSociale.Strings[ListeEmetteurRIB.IndexOf(StrNCopyN(1, 26, RIB))] ;
+    end ;
+
+    Banque := StrNCopyNWithValeur(1, 5, RIB) ;
+    Guichet := StrNCopyNWithValeur(7, 11, RIB) ;
+    Compte := StrNCopyNWithValeur(13, 23, RIB) ;
+
+    Total := 0 ;
+
+    FileMode := fmOpenWrite ;
+    AssignFile(Fichier, SaveDialog1.FileName); { Fichier sélectionné dans la boîte de dialogue }
+    Rewrite(Fichier);
+
+    try
+        // Première ligne
+        WriteLn(Fichier, Ligne1 + '        ' + Ref + '       ' + DateAFB +
+                Completer(RS, 24) +
+                Completer(RefferenceEmission.Text, 11) + '               E     ' +
+                Guichet + Compte + '                                               ' +
+                Banque + '      ') ;
+
+        // Lignes
+        For i := 0 to ListView1.Items.Count -1 do
+        begin
+            Banque := StrNCopyNWithValeur(1, 5, ListView1.Items[i].SubItems[0]) ;
+            Guichet := StrNCopyNWithValeur(7, 11, ListView1.Items[i].SubItems[0]) ;
+            Compte := StrNCopyNWithValeur(13, 23, ListView1.Items[i].SubItems[0]) ;
+
+            Total := Total + StrToFloat(ListView1.Items[i].SubItems[2]) ;
+
+            WriteLn(Fichier, Ligne2 + '        ' + Ref + Completer(ListView1.Items[i].SubItems[3], 12) + Completer(ListView1.Items[i].Caption ,24) + Completer(ListView1.Items[i].SubItems[1], 20) + '      E     ' + Guichet + Compte + CompleterMontant(ListView1.Items[i].SubItems[2]) + Completer(ListView1.Items[i].SubItems[4], 31) + Banque + '      ') ;
+        end ;
+
+        // Avant dernière ligne
+        WriteLn(Fichier, Ligne3 + '        ' + Ref + '                                                                                    ' + CompleterMontant(FloatToStr(Total)) + '                                          ') ;
+        Result := 0;
+    finally
+        CloseFile(Fichier);
+    end ;
 end ;
 
 {*******************************************************************************
  * Enregistre Prélévement
  ******************************************************************************}
-procedure TForm1.Enregistrerprlvement1Click(Sender: TObject);
+procedure TForm1.Enregistrer1Click(Sender: TObject);
 begin
-    Save('0308', '0608', '0808', Emetteur_NumPrelevement.Text) ;
-    Modif := False ;
-end;
-
-{*******************************************************************************
- * Enregistre Prélévement accéléré
- ******************************************************************************}
-procedure TForm1.Enregistrerprlvementacclr1Click(Sender: TObject);
-begin
-    Save('0385', '0685', '0885', Emetteur_NumPrelevement.Text) ;
-    Modif := False ;
-end;
-
-{*******************************************************************************
- * Enregistre Virement
- ******************************************************************************}
-procedure TForm1.Enregistrervirement1Click(Sender: TObject);
-Var temp : String ;
-begin
-    // Il n'y a pas la référence en virement
-    temp := RefferenceEmission.Text ;
-    RefferenceEmission.Text := '' ;
-
-    Save('0302', '0602', '0802', Emetteur_NumVirement.Text) ;
-    Modif := False ;
-
-    RefferenceEmission.Text := temp ;
+    if SaveDialog1.FileName = 'Sans nom.txt'
+    then
+        Enregistrersous1Click(Sender)
+    else
+        EnregistrerLeFichier ;
 end;
 
 {*******************************************************************************
@@ -868,18 +968,18 @@ procedure TForm1.ListView1Enter(Sender: TObject);
 begin
     if TListView(Sender).ItemIndex <> -1
     then begin
-        ToolButton5.Enabled := True ;
-        ToolButton4.Enabled := True ;
-        ToolButton7.Enabled := True ;
-        ToolButton9.Enabled := True ;
+        EditerLigne.Enabled := True ;
+        SupprimerLigne.Enabled := True ;
+        Copier.Enabled := True ;
+        Couper.Enabled := True ;
         Copier1.Enabled := True ;
         Couper1.Enabled := True ;
     end
     else begin
-        ToolButton5.Enabled := False ;
-        ToolButton4.Enabled := False ;
-        ToolButton7.Enabled := False ;
-        ToolButton9.Enabled := False ;
+        EditerLigne.Enabled := False ;
+        SupprimerLigne.Enabled := False ;
+        Copier.Enabled := False ;
+        Couper.Enabled := False ;
         Copier1.Enabled := False ;
         Couper1.Enabled := False ;
     end ;
@@ -890,10 +990,10 @@ end;
  ******************************************************************************}
 procedure TForm1.ListView1Exit(Sender: TObject);
 begin
-    ToolButton5.Enabled := False ;
-    ToolButton4.Enabled := False ;
-    ToolButton7.Enabled := False ;
-    ToolButton9.Enabled := False ;
+    SupprimerLigne.Enabled := False ;
+    EditerLigne.Enabled := False ;
+    Copier.Enabled := False ;
+    Couper.Enabled := False ;
     Copier1.Enabled := False ;
     Couper1.Enabled := False ;
 end;
@@ -901,26 +1001,29 @@ end;
 procedure TForm1.Modifier1Click(Sender: TObject);
 Var AjouterModifierLigne : TAjouterModifierLigne ;
 begin
-    AjouterModifierLigne := TAjouterModifierLigne.Create(Self) ;
-    AjouterModifierLigne.ajouter.Caption := 'Modifier l''opération' ;
-
-    AjouterModifierLigne.Destinataire_RaisonSociale.Text := ListView1.Items[ListView1.ItemIndex].Caption ;
-    AjouterModifierLigne.Destinataire_RIB.Text := ListView1.Items[ListView1.ItemIndex].SubItems[0] ;
-    AjouterModifierLigne.Destinataire_Banque.Text := ListView1.Items[ListView1.ItemIndex].SubItems[1] ;
-    AjouterModifierLigne.Destinataire_Montant.Text := ListView1.Items[ListView1.ItemIndex].SubItems[2] ;
-    AjouterModifierLigne.Destinataire_Reference.Text := ListView1.Items[ListView1.ItemIndex].SubItems[3] ;
-    AjouterModifierLigne.Destinataire_Libelle.Text := ListView1.Items[ListView1.ItemIndex].SubItems[4] ;
-
-    if AjouterModifierLigne.ShowModal = mrOK
+    if ListView1.ItemIndex <> -1
     then begin
-        ListView1.Items[ListView1.ItemIndex].Caption := AjouterModifierLigne.Destinataire_RaisonSociale.Text ;
-        ListView1.Items[ListView1.ItemIndex].SubItems[0] := AjouterModifierLigne.Destinataire_RIB.Text ;
-        ListView1.Items[ListView1.ItemIndex].SubItems[1] := AjouterModifierLigne.Destinataire_Banque.Text ;
-        ListView1.Items[ListView1.ItemIndex].SubItems[2] := AjouterModifierLigne.Destinataire_Montant.Text ;
-        ListView1.Items[ListView1.ItemIndex].SubItems[3] := AjouterModifierLigne.Destinataire_Reference.Text ;
-        ListView1.Items[ListView1.ItemIndex].SubItems[4] := AjouterModifierLigne.Destinataire_Libelle.Text ;
+        AjouterModifierLigne := TAjouterModifierLigne.Create(Self) ;
+        AjouterModifierLigne.ajouter.Caption := 'Modifier l''opération' ;
 
-        Modif := True ;
+        AjouterModifierLigne.Destinataire_RaisonSociale.Text := ListView1.Items[ListView1.ItemIndex].Caption ;
+        AjouterModifierLigne.Destinataire_RIB.Text := ListView1.Items[ListView1.ItemIndex].SubItems[0] ;
+        AjouterModifierLigne.Destinataire_Banque.Text := ListView1.Items[ListView1.ItemIndex].SubItems[1] ;
+        AjouterModifierLigne.Destinataire_Montant.Text := ListView1.Items[ListView1.ItemIndex].SubItems[2] ;
+        AjouterModifierLigne.Destinataire_Reference.Text := ListView1.Items[ListView1.ItemIndex].SubItems[3] ;
+        AjouterModifierLigne.Destinataire_Libelle.Text := ListView1.Items[ListView1.ItemIndex].SubItems[4] ;
+
+        if AjouterModifierLigne.ShowModal = mrOK
+        then begin
+            ListView1.Items[ListView1.ItemIndex].Caption := AjouterModifierLigne.Destinataire_RaisonSociale.Text ;
+            ListView1.Items[ListView1.ItemIndex].SubItems[0] := AjouterModifierLigne.Destinataire_RIB.Text ;
+            ListView1.Items[ListView1.ItemIndex].SubItems[1] := AjouterModifierLigne.Destinataire_Banque.Text ;
+            ListView1.Items[ListView1.ItemIndex].SubItems[2] := AjouterModifierLigne.Destinataire_Montant.Text ;
+            ListView1.Items[ListView1.ItemIndex].SubItems[3] := AjouterModifierLigne.Destinataire_Reference.Text ;
+            ListView1.Items[ListView1.ItemIndex].SubItems[4] := AjouterModifierLigne.Destinataire_Libelle.Text ;
+
+            SetModif(True) ;
+        end ;
     end ;
 end;
 
@@ -936,12 +1039,6 @@ begin
     try
         Registre.RootKey := HKEY_CURRENT_USER ;
         Registre.OpenKey(CHEMIN_REGISTRE, True) ;
-
-        Emetteur_RaisonSociale.Text := Registre.ReadString('Emetteur_RaisonSociale');
-        Emetteur_NumPrelevement.Text := Registre.ReadString('Emetteur_NumPrelevement');
-        Emetteur_NumVirement.Text := Registre.ReadString('Emetteur_NumVirement');
-        Emetteur_Banque.Text := Registre.ReadString('Emetteur_Banque');
-        Emetteur_RIB.Text := Registre.ReadString('Emetteur_RIB');
 
         if Registre.ValueExists('Font_Charset')
         then
@@ -1272,15 +1369,6 @@ Var Memo : TMemo ;
     i    : Integer ;
     ListItem : TListItem ;
 
-    function StrNCopyN(debut, fin : Integer; texte : String) : String ;
-    Var i : Integer ;
-    begin
-        Result := '' ;
-
-        For i := debut to fin do
-            Result := Result + texte[i] ;
-    end ;
-
     procedure Erreur ;
     begin
         Application.MessageBox('Les données du presse papier sont invalides.', 'Erreur', MB_OK + MB_ICONERROR) ;
@@ -1430,7 +1518,7 @@ end;
  ******************************************************************************}
 procedure TForm1.Imprimer1Click(Sender: TObject);
 Var PrintText : System.Text ;
-    Total : Extended ;    
+    Total : Extended ;
 i : Integer ;
 
     function DateVirement
@@ -1484,10 +1572,11 @@ begin
         Rewrite(PrintText) ;
         Printer.Canvas.Font := FontDialog1.Font ;
 
-        WriteLn(PrintText, Emetteur_RaisonSociale.Text);
+        WriteLn(PrintText, ListeEmetteurRaisonSociale.Strings[ListeEmetteurRIB.IndexOf(StrNCopyN(1, 26, ListeEmetteurComboBox.Text))]);
         WriteLn(PrintText, 'Référence du lot : ' + RefferenceEmission.Text);
         WriteLn(PrintText, 'Imprimer le ' + DateToStr(Date) + ' et présenté le ' + DateVirement) ;
-        WriteLn(PrintText, 'RIB d''émission' + Emetteur_RIB.Text) ;
+        WriteLn(PrintText, 'RIB d''émission : ' + StrNCopyN(1, 26, ListeEmetteurComboBox.Text)) ;
+        WriteLn(PrintText, '') ;
 
         Total := 0 ;
 
@@ -1501,8 +1590,9 @@ begin
             PrintLine(PrintText) ;
             Total := Total + StrToFloat(ListView1.Items[i].SubItems[2]) ;
         end ;
-        
-        WriteLn(PrintText, IntToStr(ListView1.Items.Count) + ' enregistrement(s) pour un montant total de ' + FloatToStr(Total) + 'euro(s).');
+
+        WriteLn(PrintText, '') ;
+        WriteLn(PrintText, IntToStr(ListView1.Items.Count) + ' enregistrement(s) pour un montant total de ' + FloatToStr(Total) + ' euro(s).');
 
         CloseFile(PrintText) ;
     end ;
@@ -1516,6 +1606,1010 @@ Var Licence : TLicence ;
 begin
     Licence := TLicence.Create(Self) ;
     Licence.ShowModal ;
+    Licence.Free ;
 end;
 
+{*******************************************************************************
+ * Définit la variable Modif
+ ******************************************************************************}
+procedure TForm1.SetModif(Valeur : Boolean) ;
+begin
+    Modif := Valeur ;
+    Enregistrer.Enabled := Valeur ;
+    Enregistrer1.Enabled := Valeur ;
+end ;
+
+{*******************************************************************************
+ * Menu enregistrer
+ ******************************************************************************}
+procedure TForm1.Enregistrersous1Click(Sender: TObject);
+begin
+    SaveDialogExitState := SaveDialog1.Execute ;
+    
+    if SaveDialogExitState
+    then begin
+        Form1.Caption := 'QuickVirPrel [' + ExtractFileName(SaveDialog1.FileName) + ']' ;
+        Enregistrer1Click(Sender) ;
+    end ;
+end ;
+
+{*******************************************************************************
+ * Enregistre le fichier
+ ******************************************************************************}
+procedure Tform1.EnregistrerLeFichier ;
+Var resultat : Integer ;
+    tmp,ref : String ;
+begin
+    resultat := -1 ;
+
+    case SaveDialog1.FilterIndex of
+        1 : begin
+                tmp := RefferenceEmission.Text ;
+                RefferenceEmission.Text := '' ;
+
+                if ListeEmetteurComboBox.Text = 'Autre...'
+                then
+                    ref := EmetteurNumeroAutre
+                else
+                    ref := ListeEmetteurNumeroVirement.Strings[ListeEmetteurRIB.IndexOf(StrNCopyN(1, 26, ListeEmetteurComboBox.Text))] ;
+
+                resultat := Save('0302', '0602', '0802', ref) ;
+                RefferenceEmission.Text := tmp ;
+            end ;
+        2 : resultat := Save('0308', '0608', '0808', ListeEmetteurNumeroPrelevement.Strings[ListeEmetteurRIB.IndexOf(StrNCopyN(1, 26, ListeEmetteurComboBox.Text))]) ;
+        3 : resultat := Save('0385', '0685', '0885', ListeEmetteurNumeroPrelevement.Strings[ListeEmetteurRIB.IndexOf(StrNCopyN(1, 26, ListeEmetteurComboBox.Text))]) ;
+    end ;
+
+    case Resultat of
+        -1 : Application.MessageBox('Une erreur est survenue lors de l''enregistrement.', 'Erreur', MB_OK + MB_ICONERROR) ;
+         0 : SetModif(False) ;
+    end ;
+end;
+
+{*******************************************************************************
+ * Affiche la fenêtre de Wizard
+ ******************************************************************************}
+procedure TForm1.Wizard ;
+begin
+    Application.MessageBox('Aucun émetteur n''a été configuré. Veuillez en saisir un avant de continer.', 'Premier lancement', MB_OK + MB_ICONINFORMATION) ;
+    EmetteurAjout1Click(Self) ;
+end ;
+
+{*******************************************************************************
+ * Lit la liste des émetteurs
+ ******************************************************************************}
+procedure Tform1.LireEmetteur ;
+Var Registre : TRegistry ;
+    i, Nb : Integer ;
+    tmp : String ;
+begin
+    Registre := TRegistry.Create ;
+
+    ListeEmetteurRaisonSociale := TStringList.Create ;
+    ListeEmetteurRIB := TStringList.Create ;
+    ListeEmetteurNumeroVirement := TStringList.Create ;
+    ListeEmetteurNumeroPrelevement := TStringList.Create ;
+    ListeEmetteurNomBanque := TStringList.Create ;
+
+
+    try
+        { Lancer au démarrage de l'ordi }
+        Registre.RootKey := HKEY_CURRENT_USER ;
+
+        Registre.OpenKey(CHEMIN_REGISTRE + '\Emetteur', True) ;
+
+        if Registre.ValueExists('NB_Emetteur')
+        then begin
+            Nb := Registre.ReadInteger('NB_Emetteur') ;
+
+            if Nb > 0
+            then begin
+                For i := 0 to Nb - 1 do
+                begin
+                    tmp := IntToStr(i) ;
+                    ListeEmetteurRIB.Add(Registre.ReadString(tmp + '_RIB')) ;
+                    ListeEmetteurNumeroVirement.Add(Registre.ReadString(tmp + '_NumeroVirement')) ;
+                    ListeEmetteurNumeroPrelevement.Add(Registre.ReadString(tmp + '_NumeroPrelevement')) ;
+                    ListeEmetteurNomBanque.Add(Registre.ReadString(tmp + '_NomBanque')) ;
+                    ListeEmetteurRaisonSociale.Add(Registre.ReadString(tmp + '_RaisonSocial')) ;
+                end ;
+            end
+            else
+                // Lancer le Wizard
+                Wizard ;
+        end
+        else
+            // Lancer le Wizard
+            Wizard ;
+
+        Registre.CloseKey ;
+    finally
+        Registre.Free ;
+    end ;
+end ;
+
+{*******************************************************************************
+ * Lance le site web
+ ******************************************************************************}
+procedure TForm1.VisiterlesiteWebdeQuickVirPrel1Click(Sender: TObject);
+begin
+    ShellExecute(Handle, 'OPEN', 'http://php4php.free.fr/quickvirprel/','','',SW_SHOWNORMAL);
+end;
+
+{*******************************************************************************
+ * Lance le site web
+ ******************************************************************************}
+procedure TForm1.Historiquedesversions1Click(Sender: TObject);
+begin
+    ShellExecute(Handle, 'OPEN', PCHar(ExtractFileDir(Application.ExeName) + '\historique.txt'),'','',SW_SHOWNORMAL);
+end;
+
+{*******************************************************************************
+ * Enregistre un emetteur dans la base de registre
+ ******************************************************************************}
+procedure TForm1.SauveEmetteurRegistre(Num : Integer; RaisonSocial : String; RIB : String; NumVirement : String; NumPrelevement : String; NomBanque : String; UpdateNB : boolean) ;
+Var Registre : TRegistry ;
+    tmp : String ;
+begin
+    Registre := TRegistry.Create ;
+    tmp := IntToStr(Num) ;
+
+    try
+        { Lancer au démarrage de l'ordi }
+        Registre.RootKey := HKEY_CURRENT_USER ;
+
+        Registre.OpenKey(CHEMIN_REGISTRE + '\Emetteur', True) ;
+
+        Registre.WriteString(tmp + '_RaisonSocial', RaisonSocial) ;
+        Registre.WriteString(tmp + '_RIB', RIB) ;
+        Registre.WriteString(tmp + '_NumeroVirement', NumVirement) ;
+        Registre.WriteString(tmp + '_NumeroPrelevement', NumPrelevement) ;
+        Registre.WriteString(tmp + '_NomBanque', NomBanque) ;
+
+        if UpdateNB
+        then
+            Registre.WriteInteger('NB_Emetteur', Num + 1);
+
+        Registre.CloseKey ;
+    finally
+        Registre.Free ;
+    end ;
+end ;
+
+{*******************************************************************************
+ * Ajoute un émetteur
+ ******************************************************************************}
+procedure TForm1.EmetteurAjout1Click(Sender: TObject);
+Var AjoutEmetteur : TAjoutEmetteur ;
+begin
+    AjoutEmetteur := TAjoutEmetteur.Create(Self) ;
+
+    // Si la fenêtre n'est pas visible on l'affiche
+    if not Visible
+    then
+        Show ;
+
+     // Ajouter à la liste si mrOK
+    if AjoutEmetteur.ShowModal = mrOK
+    then begin
+        ListeEmetteurRaisonSociale.Add(AjoutEmetteur.Emetteur_RaisonSociale.Text) ;
+        ListeEmetteurRIB.Add(AjoutEmetteur.Emetteur_RIB.Text) ;
+        ListeEmetteurNumeroVirement.Add(AjoutEmetteur.Emetteur_NumVirement.Text) ;
+        ListeEmetteurNumeroPrelevement.Add(AjoutEmetteur.Emetteur_NumPrelevement.Text) ;
+        ListeEmetteurNomBanque.Add(AjoutEmetteur.Emetteur_Banque.Text) ;
+
+        // Enregistrement dans la base de registre
+        // Fonction avec valeur du rang et toutes les autres valeurs
+        SauveEmetteurRegistre(ListeEmetteurRaisonSociale.Count - 1, AjoutEmetteur.Emetteur_RaisonSociale.Text, AjoutEmetteur.Emetteur_RIB.Text, AjoutEmetteur.Emetteur_NumVirement.Text, AjoutEmetteur.Emetteur_NumPrelevement.Text, AjoutEmetteur.Emetteur_Banque.Text, True) ;
+        MiseAJourListeEmetteurComboBox ;
+    end ;
+
+    AjoutEmetteur.Free ;
+end;
+
+{*******************************************************************************
+ * Afficha la liste des émetteur
+ ******************************************************************************}
+procedure TForm1.EmetteurModifier2Click(Sender: TObject);
+Var Emetteur : TEmetteur ;
+begin
+    Emetteur := TEmetteur.Create(Self);
+    Emetteur.ShowModal ;
+    MiseAJourListeEmetteurComboBox ;
+    Emetteur.Free ;
+end;
+
+{*******************************************************************************
+ * Met à jour la liste des Emetteurs
+ ******************************************************************************}
+procedure TForm1.MiseAjourRegistreEmetteur ;
+Var Registre : TRegistry ;
+    Nb, i : Integer ;
+    tmp : string ;
+begin
+    for i := 0 to ListeEmetteurRaisonSociale.Count - 1 do
+    begin
+        SauveEmetteurRegistre(i, ListeEmetteurRaisonSociale.Strings[i], ListeEmetteurRIB.Strings[i], ListeEmetteurNumeroVirement.Strings[i], ListeEmetteurNumeroPrelevement.Strings[i], ListeEmetteurNomBanque.Strings[i], False) ;
+    end ;
+
+    Registre := TRegistry.Create ;
+
+    try
+        { Lancer au démarrage de l'ordi }
+        Registre.RootKey := HKEY_CURRENT_USER ;
+
+        Registre.OpenKey(CHEMIN_REGISTRE + '\Emetteur', True) ;
+
+        if Registre.ValueExists('NB_Emetteur')
+        then begin
+            Nb := Registre.ReadInteger('NB_Emetteur') ;
+
+            // S'il y a moins de valeur à enregistrer que ce qui se trouve dans
+            // la base de registre, on supprimer les clefs restantes
+            if Nb > ListeEmetteurRaisonSociale.Count
+            then begin
+                for i := ListeEmetteurRaisonSociale.Count to Nb do
+                begin
+                    tmp := IntToStr(i) ;
+                    Registre.DeleteValue(tmp + '_RaisonSocial') ;
+                    Registre.DeleteValue(tmp + '_RIB') ;
+                    Registre.DeleteValue(tmp + '_NumeroVirement') ;
+                    Registre.DeleteValue(tmp + '_NumeroPrelevement') ;
+                    Registre.DeleteValue(tmp + '_NomBanque') ;
+                end ;
+            end ;
+        end ;
+
+        Registre.WriteInteger('NB_Emetteur', ListeEmetteurRaisonSociale.Count) ;
+
+        Registre.CloseKey ;
+    finally
+        Registre.Free ;
+    end ;
+end ;
+
+{*******************************************************************************
+ * Met à jour la liste des Emetteurs de la combo box
+ ******************************************************************************}
+procedure TForm1.MiseAJourListeEmetteurComboBox ;
+Var i, OldIndex : Integer ;
+begin
+    OldIndex := ListeEmetteurComboBox.ItemIndex ;
+
+    ListeEmetteurComboBox.Items.Clear ;
+
+    For i:= 0 to ListeEmetteurRaisonSociale.Count - 1 do
+    begin
+        ListeEmetteurComboBox.Items.Add(ListeEmetteurRIB.Strings[i] + ' / ' + ListeEmetteurRaisonSociale.Strings[i] + ' / ' + ListeEmetteurNomBanque.Strings[i]) ;
+    end ;
+
+    ListeEmetteurComboBox.Items.Add('Autre...') ;
+
+    if (OldIndex <= ListeEmetteurComboBox.Items.Count) and (OldIndex <> -1)
+    then
+        ListeEmetteurComboBox.ItemIndex := OldIndex
+    else
+        ListeEmetteurComboBox.ItemIndex := 0 ;
+end ;
+
+{*******************************************************************************
+ * Copy une chaine de caractère
+ ******************************************************************************}
+function TForm1.StrNCopyN(debut, fin : Integer; texte : String) : String ;
+Var i : Integer ;
+begin
+    Result := '' ;
+
+    if fin > length(texte)
+    then
+        fin := length(texte) - 1;
+
+    For i := debut to fin do
+        Result := Result + texte[i] ;
+end ;
+
+{*******************************************************************************
+ * redimenssione la liste des émetteurs
+ ******************************************************************************}
+procedure TForm1.Panel1Resize(Sender: TObject);
+begin
+    if ConfigurerEmetteurAutre.Visible = True
+    then begin
+        ConfigurerEmetteurAutre.Left := Panel1.ClientWidth - ConfigurerEmetteurAutre.Width - 5 ;
+        ListeEmetteurComboBox.Width := Panel1.ClientWidth - ConfigurerEmetteurAutre.Width - ListeEmetteurComboBox.Left - 10 ;
+    end
+    else
+        ListeEmetteurComboBox.width := Panel1.ClientWidth -  ListeEmetteurComboBox.Left - 5;
+end;
+
+{*******************************************************************************
+ * Fait apparaitre ou disparaitre le bouton configurer
+ ******************************************************************************}
+procedure TForm1.ListeEmetteurComboBoxChange(Sender: TObject);
+begin
+    if TComboBox(Sender).Text = 'Autre...'
+    then begin
+        ConfigurerEmetteurAutre.Left := Panel1.ClientWidth - ConfigurerEmetteurAutre.Width - 5 ;
+        ListeEmetteurComboBox.Width := Panel1.ClientWidth - ConfigurerEmetteurAutre.Width - ListeEmetteurComboBox.Left - 10 ;
+        ConfigurerEmetteurAutre.Enabled := True ;
+        ConfigurerEmetteurAutre.Visible := True ;
+    end
+    else begin
+        ListeEmetteurComboBox.Width := Panel1.ClientWidth - ListeEmetteurComboBox.Left ;
+        ConfigurerEmetteurAutre.Enabled := False ;
+        ConfigurerEmetteurAutre.Visible := False ;
+    end ;
+end;
+
+{*******************************************************************************
+ * Affiche la fenêtre pour configurer l'émetteur autre
+ ******************************************************************************}
+procedure TForm1.ConfigurerEmetteurAutreClick(Sender: TObject);
+Var AjoutEmetteur : TAjoutEmetteur ;
+begin
+    AjoutEmetteur := TAjoutEmetteur.Create(Self) ;
+
+    AjoutEmetteur.Emetteur_RaisonSociale.Text := EmetteurRaisonSocialeAutre ;
+    AjoutEmetteur.Emetteur_RIB.Text := EmetteurRIBAutre ;
+    AjoutEmetteur.Emetteur_NumPrelevement.Text := EmetteurNumeroAutre ;
+
+    AjoutEmetteur.Label3.Visible := False ;
+    AjoutEmetteur.Emetteur_NumVirement.Visible := False ;
+    AjoutEmetteur.Label4.Visible := False ;
+    AjoutEmetteur.Emetteur_Banque.Visible := False ;
+    AjoutEmetteur.Label2.Caption := 'N° Emetteur' ;
+    AjoutEmetteur.Caption := 'Configuration de l''émetteur' ;
+
+    if AjoutEmetteur.ShowModal = mrOK
+    then begin
+        EmetteurRaisonSocialeAutre := AjoutEmetteur.Emetteur_RaisonSociale.Text ;
+        EmetteurRIBAutre := AjoutEmetteur.Emetteur_RIB.Text ;
+        EmetteurNumeroAutre := AjoutEmetteur.Emetteur_NumPrelevement.Text ;
+    end ;
+
+    AjoutEmetteur.Free ;
+
+end;
+
+{*******************************************************************************
+ * Extrait la première ligne de données
+ ******************************************************************************}
+function TForm1.ExtrairePremiereLigne(ligne : String) : Boolean ;
+Var temp, temp2 : String ;
+    Annee1,Annee2 : Integer ;
+    Compte, Guichet, Banque : String ;
+begin
+    Result := False ;
+    
+    temp := StrNCopyN(3, 12, ligne) ;
+    if (temp = '08        ') or (temp = '02        ') or (temp = '85        ')
+    then begin
+        // Paramètre le type de fichier
+        SaveDialog1.FilterIndex := AnsiIndexStr(ligne[3] + ligne[4], ['02', '08', '85']) + 1 ;
+
+        // Numéro Emetteur
+        EmetteurNumeroAutre := StrNCopyN(13, 18, ligne) ;
+        
+        // Date d'envoie
+        // Jour
+        ComboBox1.ItemIndex := StrToInt(StrNCopyN(26, 27, ligne)) - 1 ;
+        // Mois
+        ComboBox2.ItemIndex := StrToInt(StrNCopyN(28, 29, ligne)) - 1 ;
+        // Année
+        temp := IntToStr(CurrentYear) ;
+        Annee1 := StrToInt(temp[4]) ;
+        Annee2 := StrToInt(StrNCopyN(30, 30, ligne)) ;
+
+        if Annee1 > Annee2
+        then
+            Annee2 := Annee2 + 10 ;
+
+        ComboBox3.ItemIndex := Annee2 - Annee1 ;
+
+        // Raison social
+        EmetteurRaisonSocialeAutre := TrimRight(StrNCopyN(31, 54, ligne)) ;
+
+        // RIB
+        Guichet := StrNCopyN(87, 91, ligne) ;
+        Compte := StrNCopyN(92, 102, ligne) ;
+        Banque := StrNCopyN(150, 154, ligne) ;
+
+        temp := Banque + '-' + Guichet + '-' + Compte + '-' ;
+        temp2 := IntToStr(CalculerClefRIB(temp + '00')) ;
+
+        if length(temp2) = 1
+        then
+            temp2 := '0' + temp2 ;
+
+        EmetteurRIBAutre := temp + temp2 ;
+
+        // Référence émission
+        RefferenceEmission.Text := StrNCopyN(55, 66, ligne) ;
+
+        Result := True ;
+    end
+    else
+        Application.MessageBox('Erreur sur l''entête de la première ligne.', 'Erreur', MB_OK + MB_ICONERROR) ;
+end ;
+
+{*******************************************************************************
+ * Extrait la ligne de données
+ ******************************************************************************}
+function TForm1.ExtraireLigne(ligne : String) : Boolean ;
+begin
+    Result := False ;
+
+    if length(ligne) = 160
+    then begin
+        case AnsiIndexStr(ligne[1] + ligne[2], ['03', '06', '08']) of
+            0 : Result := ExtrairePremiereLigne(ligne) ;
+            1 : Result := ExtraireLigneDestinataire(ligne) ;
+            2 : Result := True ;// derniere ligne
+        end ;
+    end
+    else
+        Application.MessageBox('Lignes trop grandes dans le fichier !', 'Erreur', MB_OK + MB_ICONERROR) ;
+end ;
+
+{*******************************************************************************
+ * Extrait la ligne de données contenant les opérations
+ ******************************************************************************}
+function TForm1.ExtraireLigneDestinataire(ligne : String) : Boolean ;
+Var temp, temp2 : String ;
+    Compte, Guichet, Banque : String ;
+    ListItem : TListItem ;
+begin
+    Result := False ;
+    
+    temp := StrNCopyN(3, 12, ligne) ;
+    if (temp = '08        ') or (temp = '02        ') or (temp = '85        ')
+    then begin
+        ListItem := ListView1.Items.Add ;
+
+        ListItem.Caption := TrimRight(StrNCopyN(31, 54, ligne)) ;      // Raison sociale
+
+        // RIB
+        Guichet := StrNCopyN(87, 91, ligne) ;
+        Compte := StrNCopyN(92, 102, ligne) ;
+        Banque := StrNCopyN(150, 154, ligne) ;
+
+        temp := Banque + '-' + Guichet + '-' + Compte + '-' ;
+        temp2 := IntToStr(CalculerClefRIB(temp + '00')) ;
+
+        if length(temp2) = 1
+        then
+            temp2 := '0' + temp2 ;
+
+        ListItem.SubItems.Add(temp + temp2) ;   // RIB
+        ListItem.SubItems.Add(TrimRight(StrNCopyN(55, 74, ligne))) ; // Banque
+
+        // Ajoute la virgule
+        temp := StrNCopyN(103, 118, ligne) ;
+        temp := temp + temp[16] ;
+        temp[15] := temp[14] ;
+        temp[15] := ',' ;
+
+        // Permet de se débarraer des 0 devant
+        temp := FloatToStr(StrToFloat(temp)) ;
+
+        if not Form1.CheckVirgule(temp)
+        then
+            temp := temp + ',00' ;
+
+        ListItem.SubItems.Add(temp) ;   // Montant
+
+        ListItem.SubItems.Add(TrimRight(StrNCopyN(19, 30, ligne))) ;  // référence
+        ListItem.SubItems.Add(TrimRight(StrNCopyN(119, 149, ligne))) ;  // libellé
+
+        Result := True ;
+    end
+    else
+        Application.MessageBox('Erreur dans une ligne du fichier.', 'Erreur', MB_OK + MB_ICONERROR) ;    
+end ;
+
+{*******************************************************************************
+ * Ouvre un fichier à partir du menu et de la barre d'outil
+ ******************************************************************************}
+procedure TForm1.Ouvrir1Click(Sender: TObject);
+begin
+    if NouveauFichier
+    then
+        if Opendialog1.Execute
+        then
+            OuvrirUnFichier ;
+end;
+
+{*******************************************************************************
+ * Ouvre un fichier
+ ******************************************************************************}
+procedure TForm1.OuvrirUnFichier ;
+Var Fichier : TextFile ;
+    Buffer : String ;
+begin
+    Caption := 'QuickVirPrel [' + ExtractFileName(OpenDialog1.FileName) + ']' ;
+    
+    try
+        FileMode := fmOpenRead  ;
+        AssignFile(Fichier, OpenDialog1.FileName); { Fichier sélectionné dans la boîte de dialogue }
+        Reset(Fichier);
+
+        // Lecture de la première ligne
+        while not Eof(Fichier) do
+        begin
+            ReadLn(Fichier, Buffer) ;
+
+            if ExtraireLigne(Buffer) = False
+            then
+                break ;
+        end ;
+    finally
+        CloseFile(Fichier) ;
+    end ;
+
+    SaveDialog1.FileName := OpenDialog1.FileName ;
+    ListeEmetteurComboBox.ItemIndex := ListeEmetteurComboBox.Items.Count - 1 ;
+    ListeEmetteurComboBoxChange(ListeEmetteurComboBox) ;
+end ;
+
+{*******************************************************************************
+ * Lit la liste des destinataires
+ ******************************************************************************}
+procedure Tform1.LireDestinataire ;
+Var Registre : TRegistry ;
+    i, Nb : Integer ;
+    tmp : String ;
+begin
+    Registre := TRegistry.Create ;
+
+    ListeDestinataireRaisonSociale := TStringList.Create ;
+    ListeDestinataireRIB := TStringList.Create ;
+    ListeDestinataireNomBanque := TStringList.Create ;
+
+    try
+        { Lancer au démarrage de l'ordi }
+        Registre.RootKey := HKEY_CURRENT_USER ;
+
+        Registre.OpenKey(CHEMIN_REGISTRE + '\Destinataire', True) ;
+
+        if Registre.ValueExists('NB_Destinataire')
+        then begin
+            Nb := Registre.ReadInteger('NB_Destinataire') ;
+
+            if Nb > 0
+            then begin
+                For i := 0 to Nb - 1 do
+                begin
+                    tmp := IntToStr(i) ;
+                    ListeDestinataireRIB.Add(Registre.ReadString(tmp + '_RIB')) ;
+                    ListeDestinataireNomBanque.Add(Registre.ReadString(tmp + '_NomBanque')) ;
+                    ListeDestinataireRaisonSociale.Add(Registre.ReadString(tmp + '_RaisonSocial')) ;
+                end ;
+            end ;
+        end ;
+
+        Registre.CloseKey ;
+    finally
+        Registre.Free ;
+    end ;
+end ;
+
+{******************************************************************************
+ * Procédure appelée quand on drop quelque chose
+ ******************************************************************************}
+procedure TForm1.WMDropFiles(var Msg: TWMDropFiles);
+var
+  NombreDeFichiers,i:integer;
+  NomDuFichier:array[0..MAX_PATH] of char;
+  reponse : Integer ;
+
+  procedure OuvrirLeFichierDragAndDrop(var Msg: TWMDropFiles; NomDuFichier : array of char; len : Integer) ;
+  begin
+      if DragQueryFile(Msg.Drop, 0, NomDuFichier, len) > 0
+      then begin
+          if NouveauFichier
+          then begin
+              OpenDialog1.FileName := String(NomDuFichier) ;
+              OuvrirUnFichier ;
+          end ;
+      end ;
+  end ;
+  
+begin
+  try
+    // récupération du nombre de fichiers
+    NombreDeFichiers := DragQueryFile(Msg.Drop, $FFFFFFFF, NomDuFichier,
+                                      sizeof(NomDuFichier));
+
+    if NombreDeFichiers = 1
+    then begin
+        OuvrirLeFichierDragAndDrop(Msg, NomDuFichier, sizeof(NomDuFichier)) ;
+    end
+    else if NombreDeFichiers > 1
+    then begin
+        reponse := Application.MessageBox('Vous avez fait glissé plusieurs fichiers. Souhaitez-vous tous les ouvrir ?' + #10 + #13 +
+                                  'Cliquez sur Oui pour tous les ouvrir dans des dans des instances de programme différentes.' + #10 + #13 +
+                                  'Cliquez sur Non pour ouvrir le premier fichier.' + #10 + #13 +
+                                  'Cliquez sur Annuler pour annuler l''opération.', 'Drag&Drop', MB_YESNOCANCEL + MB_ICONQUESTION) ;
+       case reponse of
+            ID_YES : begin
+                        OuvrirLeFichierDragAndDrop(Msg, NomDuFichier, sizeof(NomDuFichier)) ;
+
+                        // Lance une nouvelle session pour chaque fichier
+                        for i := 1 to NombreDeFichiers - 1 do
+                        begin
+                          // récupération du nom du fichier }
+                          if DragQueryFile(Msg.Drop, i, NomDuFichier, sizeof(NomDuFichier)) > 0
+                          then begin
+                              ShellExecute(Handle, 'OPEN', PChar(Application.ExeName), NomDuFichier,'',SW_SHOWNORMAL);
+                          end ;
+                        end;
+                    end ;
+            ID_NO : OuvrirLeFichierDragAndDrop(Msg, NomDuFichier, sizeof(NomDuFichier)) ;
+        end ;
+    end ;
+  finally
+    DragFinish(Msg.Drop);
+  end;
+end;
+
+{*******************************************************************************
+ * Enregistre un destinataire dans la base de registre
+ ******************************************************************************}
+procedure TForm1.SauveDestinataireRegistre(Num : Integer; RaisonSocial : String; RIB : String; NomBanque : String; UpdateNB : boolean) ;
+Var Registre : TRegistry ;
+    tmp : String ;
+begin
+    Registre := TRegistry.Create ;
+    tmp := IntToStr(Num) ;
+
+    try
+        { Lancer au démarrage de l'ordi }
+        Registre.RootKey := HKEY_CURRENT_USER ;
+
+        Registre.OpenKey(CHEMIN_REGISTRE + '\Destinataire', True) ;
+
+        Registre.WriteString(tmp + '_RaisonSocial', RaisonSocial) ;
+        Registre.WriteString(tmp + '_RIB', RIB) ;
+        Registre.WriteString(tmp + '_NomBanque', NomBanque) ;
+
+        if UpdateNB
+        then
+            Registre.WriteInteger('NB_Destinataire', Num + 1);
+
+        Registre.CloseKey ;
+    finally
+        Registre.Free ;
+    end ;
+end ;
+
+{*******************************************************************************
+ * Met à jour la liste des Destinataires
+ ******************************************************************************}
+procedure TForm1.MiseAjourRegistreDestinataire ;
+Var Registre : TRegistry ;
+    Nb, i : Integer ;
+    tmp : string ;
+begin
+    for i := 0 to ListeDestinataireRaisonSociale.Count - 1 do
+    begin
+        SauveDestinataireRegistre(i, ListeDestinataireRaisonSociale.Strings[i], ListeDestinataireRIB.Strings[i], ListeDestinataireNomBanque.Strings[i], False) ;
+    end ;
+
+    Registre := TRegistry.Create ;
+
+    try
+        { Lancer au démarrage de l'ordi }
+        Registre.RootKey := HKEY_CURRENT_USER ;
+
+        Registre.OpenKey(CHEMIN_REGISTRE + '\Destinataire', True) ;
+
+        if Registre.ValueExists('NB_Destinataire')
+        then begin
+            Nb := Registre.ReadInteger('NB_Destinataire') ;
+
+            // S'il y a moins de valeur à enregistrer que ce qui se trouve dans
+            // la base de registre, on supprimer les clefs restantes
+            if Nb > ListeDestinataireRaisonSociale.Count
+            then begin
+                for i := ListeDestinataireRaisonSociale.Count to Nb do
+                begin
+                    tmp := IntToStr(i) ;
+                    Registre.DeleteValue(tmp + '_RaisonSocial') ;
+                    Registre.DeleteValue(tmp + '_RIB') ;
+                    Registre.DeleteValue(tmp + '_NomBanque') ;
+                end ;
+            end ;
+        end ;
+
+        Registre.WriteInteger('NB_Destinataire', ListeDestinataireRaisonSociale.Count) ;
+
+        Registre.CloseKey ;
+    finally
+        Registre.Free ;
+    end ;
+end ;
+
+{*******************************************************************************
+ * Ajoute un destinataire
+ ******************************************************************************}
+procedure TForm1.Ajouter2Click(Sender: TObject);
+Var AjoutDestinataire : TAjoutDestinataire ;
+begin
+    AjoutDestinataire := TAjoutDestinataire.Create(Self) ;
+
+    if AjoutDestinataire.ShowModal = mrOK
+    then begin
+        // Destinataire
+        ListeDestinataireRaisonSociale.Add(AjoutDestinataire.Destinataire_RaisonSociale.Text) ;
+        ListeDestinataireRIB.Add(AjoutDestinataire.Destinataire_RIB.Text)  ;
+        ListeDestinataireNomBanque.Add(AjoutDestinataire.Destinataire_Banque.Text) ;
+
+        // Enregistrement dans la base de registre
+        // Fonction avec valeur du rang et toutes les autres valeurs
+        SauveDestinataireRegistre(ListeDestinataireRaisonSociale.Count - 1, AjoutDestinataire.Destinataire_RaisonSociale.Text, AjoutDestinataire.Destinataire_RIB.Text, AjoutDestinataire.Destinataire_Banque.Text, True) ;
+    end ;
+
+    AjoutDestinataire.Free ;
+end;
+
+{*******************************************************************************
+ * Afficha la liste des destinataire
+ ******************************************************************************}
+procedure TForm1.Modifier3Click(Sender: TObject);
+Var Destinataire : TDestinataire ;
+begin
+    Destinataire := TDestinataire.Create(Self);
+    Destinataire.ShowModal ;
+    Destinataire.Free ;
+end;
+
+{*******************************************************************************
+ * Retroune la version actuelle du programme
+ ******************************************************************************}
+function TForm1.GetVersionProgram : String ;
+var
+  Handle   : DWord;
+  Info     : Pointer;
+  InfoData : Pointer;
+  InfoSize : LongInt;
+  DataLen  : UInt;
+  InfoType : string;
+begin
+    { Demande de la taille nécessaire pour stocker les infos de Version}
+    InfoSize := GetFileVersionInfoSize(PChar(Application.ExeName), Handle);
+    if (InfoSize > 0)
+    then begin
+        { Réservation de la mémoire nécessaire}
+        GetMem(Info, InfoSize);
+
+        try
+            if GetFileVersionInfo(PChar(Application.ExeName), Handle, InfoSize, Info)
+            then begin
+                InfoType := '\StringFileInfo\040C04E4\ProductVersion' ;
+
+                {
+                if VerQueryValue(Info,'\VarFileInfo\Translation',LangPtr, DataLen) then
+                InfoType:=Format('\StringFileInfo\%0.4x%0.4x\%s'#0,[LoWord(LongInt(LangPtr^)),
+                                        HiWord(LongInt(LangPtr^)), InfoType]);
+                }
+
+                if VerQueryValue(Info,@InfoType[1],InfoData,Datalen)
+                then
+                    Result := strPas(InfoData) ;
+            end ;
+        finally
+            FreeMem(Info, InfoSize);
+        end;
+    end ;
+end;
+
+{*******************************************************************************
+ * Vérifie si nouvelle version de QuickVirPrel disponible
+ ******************************************************************************}
+procedure TForm1.Vrifiersinouvelleversiondisponibl1Click(Sender: TObject);
+var Update : TUpdate ;
+begin
+   Update := TUpdate.Create(Self) ;
+   Update.ShowModal ;
+   Update.Free ;
+end;
+
+{*******************************************************************************
+ * Récupère les tailles des enêtes des listes.
+ ******************************************************************************}
+procedure TForm1.GetListViewColumnWidth(ListView : TListView) ;
+Var Registre : TRegistry ;
+    i : Integer ;
+    nb : Integer ;
+begin
+    Registre := TRegistry.Create ;
+
+    try
+        Registre.RootKey := HKEY_CURRENT_USER ;
+        Registre.OpenKey(CHEMIN_REGISTRE + '\' + ListView.Name, True) ;
+
+        nb := ListView.Columns.Count - 1 ;
+
+        for i := 0 to nb do
+        begin
+            if Registre.ValueExists(ListView.Columns.Items[i].Caption)
+            then
+                ListView.Columns.Items[i].Width := Registre.ReadInteger(ListView.Columns.Items[i].Caption) ;
+        end ;
+
+    finally
+        Registre.Free ;
+    end ;
+end ;
+
+{*******************************************************************************
+ * Sauvegarde les tailles des enêtes des listes.
+ ******************************************************************************}
+procedure TForm1.SetListViewColumnWidth(ListView : TListView) ;
+Var Registre : TRegistry ;
+    i : Integer ;
+    nb : Integer ;
+begin
+    Registre := TRegistry.Create ;
+
+    try
+        Registre.RootKey := HKEY_CURRENT_USER ;
+        Registre.OpenKey(CHEMIN_REGISTRE + '\' + ListView.Name, True) ;
+
+        nb := ListView.Columns.Count - 1 ;
+
+        for i := 0 to nb do
+        begin
+            Registre.WriteInteger(ListView.Columns.Items[i].Caption, ListView.Columns.Items[i].Width) ;
+        end ;
+
+    finally
+        Registre.Free ;
+    end ;
+end ;
+
+{*******************************************************************************
+ * Sauvegarde les tailles des enêtes des listes.
+ ******************************************************************************}
+procedure TForm1.SetWindowProperties(Fenetre : TForm) ;
+Var Registre : TRegistry ;
+begin
+    Registre := TRegistry.Create ;
+
+    try
+        Registre.RootKey := HKEY_CURRENT_USER ;
+        Registre.OpenKey(CHEMIN_REGISTRE + '\' + Fenetre.Name, True) ;
+
+        if Fenetre.WindowState = wsMaximized
+        then begin
+            Registre.WriteInteger('WindowState', 1) ;
+        end
+        else begin
+            Registre.WriteInteger('WindowState', 0) ;
+
+            Registre.WriteInteger('Width', Fenetre.Width) ;
+            Registre.WriteInteger('Height', Fenetre.Height) ;
+
+            if Fenetre.Position <> poMainFormCenter
+            then begin
+                Registre.WriteInteger('Top', Fenetre.Top) ;
+                Registre.WriteInteger('Left', Fenetre.Left) ;
+            end ;
+            //poDesktopCenter
+        end ;
+
+
+    finally
+        Registre.Free ;
+    end ;
+end ;
+
+{*******************************************************************************
+ * Sauvegarde les tailles des enêtes des listes.
+ ******************************************************************************}
+procedure TForm1.GetWindowProperties(Fenetre : TForm) ;
+Var Registre : TRegistry ;
+begin
+    Registre := TRegistry.Create ;
+
+    try
+        Registre.RootKey := HKEY_CURRENT_USER ;
+        Registre.OpenKey(CHEMIN_REGISTRE + '\' + Fenetre.Name, True) ;
+
+
+        if Registre.ValueExists('Width')
+        then begin
+            Fenetre.Width := Registre.ReadInteger('Width') ;
+
+            // si fenêtre plus gande que l'écran, prend la taille de l'écran
+            if Fenetre.Width > Screen.Width
+            then
+                Fenetre.Width := Screen.Width ;
+        end ;
+
+        if Registre.ValueExists('Height')
+        then begin
+            Fenetre.Height := Registre.ReadInteger('Height') ;
+
+            // si fenêtre plus gande que l'écran, prend la taille de l'écran
+            if Fenetre.Height > Screen.Height
+            then
+                Fenetre.Height := Screen.Height ;
+        end ;
+
+        if Registre.ValueExists('Top')
+        then begin
+            Fenetre.Top := Registre.ReadInteger('Top') ;
+
+            // si fenêter en dehors de l'écran
+            if Fenetre.Top >= Screen.Height
+            then
+                Fenetre.Top := 0 ;
+        end ;
+
+        if Registre.ValueExists('Left')
+        then begin
+            Fenetre.Left := Registre.ReadInteger('Left') ;
+
+            // si fenêter en dehors de l'écran
+            if Fenetre.Left >= Screen.Width
+            then
+                Fenetre.Left := 0 ;
+        end ;
+
+
+        if Registre.ValueExists('WindowState')
+        then begin
+            if Registre.ReadInteger('WindowState') <> 0
+            then begin
+                 SendMessage(Self.Handle, WM_SYSCOMMAND, SC_MAXIMIZE, 0) ;
+            end ;
+        end ;
+
+    finally
+        Registre.Free ;
+    end ;
+end ;
+(*
+procedure TForm1.OnMessage(var Msg: tagMSG; var Handled: Boolean);
+begin
+{
+    if (Msg.Message = WM_SYSCOMMAND ) and (Msg.wParam = SC_MAXIMIZE)
+    then
+            ShowMessage('Vive Delphi!');
+}
+    if (Msg.Message = WM_SIZE)
+    then
+            ShowMessage('Size');
+
+end;
+
+procedure TForm1.NewWindowProc(var Msg: TMessage);
+begin
+  //.Interception de l'évènement WM_SIZE
+  if (Msg.Msg = WM_SIZE) and (Msg.WParam = SIZE_RESTORED)
+  then begin
+       Caption := 'restauration' ;
+  end
+  else
+       Caption := '' ;
+
+  //.Traitement normal des autres message.
+  OldWindowProc(Msg);
+end;
+
+procedure TForm1.NewResizedProc(var msg:TMessage);
+begin
+  if (Msg.Msg = WM_SIZE) and (Msg.WParam = SIZE_RESTORED)
+  then begin
+       Caption := 'restauration' ;
+
+  end
+  else
+       Caption := '' ;
+
+
+    inherited;
+end ;
+*)
 end.

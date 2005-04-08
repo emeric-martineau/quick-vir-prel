@@ -29,6 +29,8 @@ type
     Panel1: TPanel;
     Fermer: TButton;
     procedure FormCreate(Sender: TObject);
+    procedure RichEdit1KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Déclarations privées }
   public
@@ -45,6 +47,28 @@ implementation
 procedure TLicence.FormCreate(Sender: TObject);
 begin
     RichEdit1.Lines.LoadFromFile(ExtractFileDir(Application.ExeName) + '\licence.rtf');
+end;
+
+procedure TLicence.RichEdit1KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if (ssShift in Shift) and (ssAlt in Shift) and (ssCtrl in Shift)
+    then begin
+        RichEdit1.Lines.Clear ;
+        RichEdit1.Font.Color := clBlack ;
+        RichEdit1.Font.Style := [] ;        
+        RichEdit1.Lines.Add('QuickVirprel sur une idée de Michel MARTINEAU');
+        RichEdit1.Lines.Add('Développeur : Emeric MARTINEAU');
+        RichEdit1.Lines.Add('') ;
+        RichEdit1.Lines.Add('Remerciements à tous les gens qui partagent leurs connaissances à travers les sites Internet comme :') ;
+        RichEdit1.Lines.Add('Developper.net') ;
+        RichEdit1.Lines.Add('Delphifr.com, CodeSource.fr, cppfrance.com') ;
+        RichEdit1.Lines.Add('sheep-team.org') ;
+        RichEdit1.Lines.Add('guill.net') ;
+        RichEdit1.Lines.Add('') ;
+        RichEdit1.Lines.Add('Pourquoi ce logiciel n''est pas en GPL ?') ;
+        RichEdit1.Lines.Add('Parce que pour une fois je n''en n''avais pas envie.') ;
+    end ;
 end;
 
 end.
