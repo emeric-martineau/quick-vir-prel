@@ -12,7 +12,11 @@ uses
   UnitAjouterDestinataire in 'UnitAjouterDestinataire.pas' {AjoutDestinataire},
   UnitDestinataire in 'UnitDestinataire.pas' {Destinataire},
   UnitUpDate in 'UnitUpDate.pas' {Update},
-  UnitUpdateThread in 'UnitUpdateThread.pas';
+  UnitUpdateThread in 'UnitUpdateThread.pas',
+  UnitCalculeClefRIB in 'UnitCalculeClefRIB.pas' {CalculeClefRIB},
+  UnitCVS in 'UnitCVS.pas' {CSV},
+  UnitConfiguration in 'UnitConfiguration.pas' {Configuration},
+  UnitFichiersRecents in 'UnitFichiersRecents.pas';
 
 {$R *.res}
 

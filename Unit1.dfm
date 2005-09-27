@@ -1,9 +1,10 @@
 object Form1: TForm1
   Left = 279
   Top = 116
-  Width = 640
-  Height = 614
+  AutoScroll = False
   Caption = 'QuickVirPrel [Sans nom]'
+  ClientHeight = 568
+  ClientWidth = 632
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,7 +23,7 @@ object Form1: TForm1
     Left = 0
     Top = 110
     Width = 632
-    Height = 450
+    Height = 458
     Align = alClient
     Columns = <
       item
@@ -57,7 +58,6 @@ object Form1: TForm1
     Font.Name = 'MS Sans Serif'
     Font.Pitch = fpFixed
     Font.Style = []
-    FullDrag = True
     MultiSelect = True
     ReadOnly = True
     RowSelect = True
@@ -376,6 +376,8 @@ object Form1: TForm1
     end
   end
   object MainMenu1: TMainMenu
+    BiDiMode = bdLeftToRight
+    ParentBiDiMode = False
     Left = 304
     Top = 296
     object Fichier1: TMenuItem
@@ -392,15 +394,63 @@ object Form1: TForm1
         OnClick = Ouvrir1Click
       end
       object Enregistrer1: TMenuItem
-        Caption = 'Enregistrer'
+        Caption = '&Enregistrer'
         ShortCut = 16467
         OnClick = Enregistrer1Click
       end
       object Enregistrersous1: TMenuItem
-        Caption = 'Enregistrer sous'
+        Caption = 'Enregistrer &sous'
         OnClick = Enregistrersous1Click
       end
       object N6: TMenuItem
+        Caption = '-'
+      end
+      object Exporter1: TMenuItem
+        Caption = 'E&xporter'
+        object raitementencours1: TMenuItem
+          Caption = 'Traitement en cours'
+          object ExporterTexte: TMenuItem
+            Caption = 'Texte'
+            OnClick = ExporterTexteClick
+          end
+          object HTML1: TMenuItem
+            Caption = 'HTML'
+            OnClick = ExporterTexteClick
+          end
+          object XHTML1: TMenuItem
+            Caption = 'XHTML'
+            OnClick = ExporterTexteClick
+          end
+          object XML1: TMenuItem
+            Caption = 'XML'
+            OnClick = ExporterTexteClick
+          end
+          object CSV1: TMenuItem
+            Caption = 'CSV'
+            OnClick = ExporterTexteClick
+          end
+        end
+        object Listedestinataires1: TMenuItem
+          Caption = 'Liste destinataires'
+          OnClick = Listedestinataires1Click
+        end
+        object Listemetteurs1: TMenuItem
+          Caption = 'Liste '#233'metteurs'
+          OnClick = Listedestinataires1Click
+        end
+      end
+      object Importer1: TMenuItem
+        Caption = 'I&mporter'
+        object Listedestinataires2: TMenuItem
+          Caption = 'Liste &destinataires'
+          OnClick = Listedestinataires2Click
+        end
+        object Listemetteurs2: TMenuItem
+          Caption = 'Liste '#233'&metteurs'
+          OnClick = Listedestinataires2Click
+        end
+      end
+      object N5: TMenuItem
         Caption = '-'
       end
       object Configurerlimpression1: TMenuItem
@@ -508,6 +558,17 @@ object Form1: TForm1
       object Vrifiersinouvelleversiondisponibl1: TMenuItem
         Caption = '&V'#233'rifier si nouvelle version disponible'
         OnClick = Vrifiersinouvelleversiondisponibl1Click
+      end
+      object CalculedeclefRIB1: TMenuItem
+        Caption = 'Calcule de clef &RIB'
+        OnClick = CalculedeclefRIB1Click
+      end
+      object N7: TMenuItem
+        Caption = '-'
+      end
+      object Configuration1: TMenuItem
+        Caption = '&Configuration'
+        OnClick = Configuration1Click
       end
     end
     object Aide1: TMenuItem
@@ -1111,6 +1172,7 @@ object Form1: TForm1
     Filter = 
       'Fichier de virement|*.txt|Fichier de pr'#233'l'#233'vement|*.txt|Fichier d' +
       'e pr'#233'l'#233'vement acc'#233'l'#233'r'#233'|*.txt'
+    Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
     Left = 336
     Top = 296
   end

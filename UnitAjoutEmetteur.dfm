@@ -118,6 +118,7 @@ object AjoutEmetteur: TAjoutEmetteur
     Top = 136
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Annuler'
     ModalResult = 2
     TabOrder = 6

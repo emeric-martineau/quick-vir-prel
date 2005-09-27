@@ -67,7 +67,7 @@ procedure TAjouterModifierLigne.ajouterClick(Sender: TObject);
         Application.MessageBox(Texte, 'Erreur', MB_OK + MB_ICONERROR) ;
     end ;
 begin
-    if Form1.CheckRIB(Destinataire_RIB.Text)
+    if (Form1.DisabledRIBChek) or (Form1.CheckRIB(Destinataire_RIB.Text))
     then begin
         if Destinataire_RaisonSociale.Text <> ''
         then

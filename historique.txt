@@ -1,5 +1,23 @@
 HISTORIQUE DES VERSIONS DE QUICKVIRPREL
 =======================================
+version 2.1 : (28/09/2005)
+  - Ajout d'un utilitaire de calcule de clef RIB,
+  - Correction d'un bug lors de l'impression en ayant un émetteur non dans la liste,
+  - Correction d'un bug qui ne prenait pas les bonnes références lors de l'impression,
+  - Correction à l'ouverture d'un fichier. S'assure que le fichier et chemin existe bien,
+  - Exportation HTML, XHTML, XML, CVS, Texte,
+  - Correction d'un bug lors de l'enregistrement des destinataire,
+  - Export/Import Emetteur, Destinataire dans un fichier ini pour pouvoir balader les infos,
+  - Si appuie sur Echape dans une fenêtre fermer fenêtre,
+  - Pouvoir configurer la vérification d'émetteur présent dans la base de registre au démarrage,
+  - Désactiver vérifiaction RIB,
+  - Configuration de la barre d'outil et de l'affichage de la grille,
+  - Demander si on veut imprimer lorsqu'on a enregistrer un fichier (Configurable),
+  - Pouvoir réinitialiser la config par défaut
+  - Pouvoir réinitiliser les paramètres par la lignes de commandes /resetconfig
+  - Prise en compte des lignes plus courtes dans le fichier généré par certain programme,
+  - Amélioration du signalement d'erreur à l'oouverture d'un fichier.
+
 version 2.0 : (23/06/2005)
   - Mémorisation de plusieurs émetteurs,
   - Mémorisation de plusieurs destinataires

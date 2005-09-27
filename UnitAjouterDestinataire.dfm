@@ -80,6 +80,7 @@ object AjoutDestinataire: TAjoutDestinataire
     Top = 96
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Annuler'
     ModalResult = 2
     TabOrder = 4

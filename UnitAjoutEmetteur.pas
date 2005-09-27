@@ -128,7 +128,7 @@ procedure TAjoutEmetteur.Button1Click(Sender: TObject);
         Application.MessageBox(Texte, 'Erreur', MB_OK + MB_ICONERROR) ;
     end ;
 begin
-    if Form1.CheckRIB(Emetteur_RIB.Text)
+    if (Form1.DisabledRIBChek) or (Form1.CheckRIB(Emetteur_RIB.Text))
     then begin
         if Emetteur_RaisonSociale.Text <> ''
         then

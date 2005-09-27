@@ -1,20 +1,3 @@
-{*******************************************************************************
- * Copyright MARTINEAU Emeric. Tous droits réservé.
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
- * Place, Suite 330, Boston, MA 02111-1307 USA
- *
- ******************************************************************************}
 {*
  * TODO :
  *       - pouvoir réduire en systray [inutile]
@@ -26,11 +9,23 @@
  *
  *
  *       Version 2.1
+ *       - Mettre sablier quand nécessaire
+ *       - Export/Import Emetteur, Destinataire dans un fichier ini pour pouvoir balader les infos
+ *       - Demander si on veut imprimer lorsqu'on a enregistrer un fichier (Configurable)
+ *       - Pouvoir réinitialiser la config par défaut
+ *       - pouvoir réinitiliser les paramètres par la lignes de commandes ou pouvoir lancer le panneau de configuration
+ *       - configuration de la barre d'outil
+ *       - pouvoir configurer la vérification d'émetteur présent dans la base de registre au démarrage
  *       - pouvoir configurer où sont enregistrer les informations Emetteur/Destinataire :
  *             Information propre à chaque utilisateur (HKCU)
  *             Information commun à tous les utilisateurs de cet ordinateur (HKLM)
+ *       - possibilité de charger un émetteur autre à partir d'un émetteur connu
  *       - gérer un apperçu avant impression
- *
+ *       - pouvoir afficher une grille ListView1.GridLines := TRue ;
+ *       - ListView1.HotTrak & HotTrackStyles, ListView1.FullDrag
+ *       - Désactiver vérifiaction RIB
+ *       - Liste des fichiers récents
+ * 
  *
  *       Version 1.4
  *       - Faire une version en réseau
@@ -73,7 +68,7 @@
               - nouvelle barre d'outil
               - N'avoir plus qu'un menu enregistrer, mais en type de fichier, dans la boite de dialogue permettre de choisir
                 l'un des trois type.
-              - Enregistrer sous donc mémoriser le nom, le type d'opération
+              - Enregistrer sous donc mémoriser le nom, le type d'opération  
               - Modif et activation désactivation bouton et menu enregistrer
               - Amélioration des activations/désactivation des menus
               - Correction du bug quand double clique quand la liste est vide.
@@ -116,21 +111,6 @@
              - correction à l'ouverture d'un fichier. S'assure que le fichier et chemin existe bien,
              - Exportation HTML, XHTML, XML, CVS, Texte (comme l'impression),
              - Mettre sablier quand nécessaire,
-             - Correction d'un bug lors de l'enregistrement des destinataire,
-             - Export/Import Emetteur, Destinataire dans un fichier ini pour pouvoir balader les infos,
-             - Si appuie sur Echape dans une fenêtre fermer fenêtre,
-             - pouvoir afficher une grille ListView1.GridLines := TRue ;
-             - ListView1.HotTrak & HotTrackStyles,
-             - pouvoir configurer la vérification d'émetteur présent dans la base de registre au démarrage,
-             - Désactiver vérifiaction RIB,
-             - configuration de la barre d'outil (ToolBar1.Customizable := True, ToolBar1.Flat, ToolBar1.ShowCaptions, ToolBar1.List),
-             - Demander si on veut imprimer lorsqu'on a enregistrer un fichier (Configurable),
-             - Pouvoir réinitialiser la config par défaut
-             - pouvoir réinitiliser les paramètres par la lignes de commandes /resetconfig
-             - Mettre sablier quand nécessaire,
-             - prise en compte des lignes plus courtes dans le fichier généré par certain programme,
-             - amélioration du signalement d'erreur à l'oouverture d'un fichier,
-
     A TERMINER :
 
 }
@@ -143,7 +123,7 @@ uses
   Dialogs, ComCtrls, StdCtrls, DateUtils, ExtCtrls, Buttons, Mask, Menus, Registry,
   apropos, AddModLine, ToolWin, ImgList, Printers, ShellAPI, UnitLicence, UnitAjoutEmetteur,
   UnitEmetteur, StrUtils, UnitAjouterDestinataire, UnitDestinataire, UnitUpDate,
-  UnitCalculeClefRIB, UnitCVS, IniFiles, UnitConfiguration, UnitFichiersRecents ;
+  UnitCalculeClefRIB, UnitCVS, IniFiles ;
 
 type
   TForm1 = class(TForm)
@@ -234,11 +214,6 @@ type
     CSV1: TMenuItem;
     Listedestinataires1: TMenuItem;
     Listemetteurs1: TMenuItem;
-    Importer1: TMenuItem;
-    Listedestinataires2: TMenuItem;
-    Listemetteurs2: TMenuItem;
-    N7: TMenuItem;
-    Configuration1: TMenuItem;
     procedure ajouterClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ComboBox2Change(Sender: TObject);
@@ -285,8 +260,6 @@ type
     procedure CalculedeclefRIB1Click(Sender: TObject);
     procedure ExporterTexteClick(Sender: TObject);
     procedure Listedestinataires1Click(Sender: TObject);
-    procedure Listedestinataires2Click(Sender: TObject);
-    procedure Configuration1Click(Sender: TObject);
 //    procedure OnMessage(var Msg: tagMSG; var Handled: Boolean);
   private
     { Déclarations privées }
@@ -295,41 +268,34 @@ type
     EmetteurRaisonSocialeAutre : String ;
     EmetteurRIBAutre : String ;
     EmetteurNumeroAutre : String ;
-    { 0 : Imprimer le fichier
-      1 : Demander si on souhaite imprimer le fichier
-      2 : Ne pas imprimer le fichier   }
-    PrintFileWhenSave : Integer ;
-    CheckEmetteurStart : Boolean ;
 //    OldWindowProc: TWndMethod;
-    function  ExtraireClefRIB(RIB : String) : ShortInt ;
-    function  Valeur(Caractere : Char) : Char ;
-    function  StrNCopyNWithValeur(debut : Integer; fin : integer; chaine : String) : String ;
-    function  Save(Ligne1 : String; Ligne2 : String; Ligne3 : String; Ref : String) : Integer ;
+    function ExtraireClefRIB(RIB : String) : ShortInt ;
+    function Valeur(Caractere : Char) : Char ;
+    function StrNCopyNWithValeur(debut : Integer; fin : integer; chaine : String) : String ;
+    function Save(Ligne1 : String; Ligne2 : String; Ligne3 : String; Ref : String) : Integer ;
     procedure LoadRegistry ;
-    function  Completer(Texte : String; longueur : Integer) : String ;
+    function Completer(Texte : String; longueur : Integer) : String ;
     procedure Supprimer ;
     procedure LireEmetteur ;
     procedure Wizard ;
     procedure SetModif(Valeur : Boolean) ;
     procedure EnregistrerLeFichier ;
     procedure MiseAJourListeEmetteurComboBox ;
-    function  StrNCopyN(debut, fin : Integer; texte : String) : String ;
-    function  ExtraireLigne(ligne : String; NumLigne : Integer) : Boolean ;
-    function  ExtrairePremiereLigne(ligne : String) : Boolean ;
-    function  ExtraireLigneDestinataire(ligne : String) : Boolean ;
+    function StrNCopyN(debut, fin : Integer; texte : String) : String ;
+    function ExtraireLigne(ligne : String) : Boolean ;
+    function ExtrairePremiereLigne(ligne : String) : Boolean ;
+    function ExtraireLigneDestinataire(ligne : String) : Boolean ;
     procedure OuvrirUnFichier ;
     procedure LireDestinataire ;
-    function  NouveauFichier : Boolean ;
+    function NouveauFichier : Boolean ;
 //    Procedure NewWindowProc(var Msg: TMessage);
 //    procedure NewResizedProc(var msg:TMessage); message WM_SIZE;
     procedure ExporterEnFichier(var F: Text) ;
     procedure ExporterEnHTML(var F: TextFile; IsXHTML : Boolean);
-    function  DateVirement : String ;
-    function  CompleterMontant(Texte : String; NoSpace : Boolean) : String ;
+    function DateVirement : String ;
+    function CompleterMontant(Texte : String; NoSpace : Boolean) : String ;
     procedure ExporterEnXML(var F: Text) ;
     procedure ExporterEnCSV(var F: TextFile; Separateur : String);
-    procedure CreateMenuRecentFile ;
-    procedure LoadRecentFile(Sender: TObject);        
   public
     { Déclarations publiques }
     // Emetteur
@@ -342,13 +308,11 @@ type
     ListeDestinataireRaisonSociale : TStringList ;
     ListeDestinataireRIB : TStringList ;
     ListeDestinataireNomBanque : TStringList ;
-    DisabledRIBChek : Boolean ;
-    RecentFiles : TRecentFiles ;    
     // Fonctions
-    function  CheckRIB(RIB : String) : Boolean ;
-    function  CheckVirgule(chaine : string) : boolean ;
+    function CheckRIB(RIB : String) : Boolean ;
+    function CheckVirgule(chaine : string) : boolean ;
     procedure MiseAjourRegistreEmetteur ;
-    procedure MiseAjourRegistreDestinataire ;
+    procedure MiseAjourRegistreDestinataire ;    
     procedure SauveEmetteurRegistre(Num : Integer; RaisonSocial : String; RIB : String; NumVirement : String; NumPrelevement : String; NomBanque : String; UpdateNB : boolean) ;
     procedure SauveDestinataireRegistre(Num : Integer; RaisonSocial : String; RIB : String; NomBanque : String; UpdateNB : boolean) ;
     procedure WMDropFiles(var Msg: TWMDropFiles); message WM_DROPFILES;
@@ -357,9 +321,7 @@ type
     procedure SetListViewColumnWidth(ListView : TListView) ;
     procedure SetWindowProperties(Fenetre : TForm) ;
     procedure GetWindowProperties(Fenetre : TForm) ;
-    function  CalculerClefRIB(RIB : String) : ShortInt ;
-    procedure ReadConfig ;
-    procedure ResetConfig ;    
+    function CalculerClefRIB(RIB : String) : ShortInt ;
   end;
 
 var
@@ -419,8 +381,6 @@ Var i : Word ;
     CurYear : Word ;
     temp : String ;
 begin
-    ReadConfig ;
-    
     // Charge l'icone de la main de Windows plutôt que de delphi
     Screen.Cursors[crHandPoint] := LoadCursor(0, IDC_HAND);
 
@@ -460,23 +420,16 @@ begin
     // Met à jour la liste des émetteurs dans la combobox
     MiseAJourListeEmetteurComboBox ;
 
-    // Créer l'objet contenant les fichiers récents
-    RecentFiles := TRecentFiles.Create(HKEY_CURRENT_USER, CHEMIN_REGISTRE) ;
-
     // Si on à un paramètre, c'est qu'on doit ouvrir un fichier
     case ParamCount of
         0 : ;
         1 : begin//ParamStr(1)
                 temp := ParamStr(1) ;
 
-                if FileExists(temp) and (temp <> '/resetconfig')
+                if FileExists(temp)
                 then begin
                     OpenDialog1.FileName := temp ;
                     OuvrirUnFichier ;
-                end
-                else if (not FileExists(temp)) and (temp = '/resetconfig')
-                then begin
-                    ResetConfig ;
                 end
                 else
                     Application.MessageBox(PChar('Le fichier ' + temp + ' est introuvable.'), 'Erreur d''ouverture de fichier', MB_OK + MB_ICONERROR) ;
@@ -488,14 +441,10 @@ begin
     // Indique que l'on peut faire du drag&drop sur la feuille
     DragAcceptFiles(Self.Handle,true);
 
-    // Récupère la config de la listview
     GetListViewColumnWidth(ListView1) ;
 
-    // Récupère les config des fenêtre
     GetWindowProperties(Self) ;
 
-    // Créer le menu des fichiers récents
-    CreateMenuRecentFile ;
 (*
     Application.OnMessage := OnMessage;
 
@@ -1728,19 +1677,7 @@ begin
          0 : SetModif(False) ;
     end ;
 
-    Screen.Cursor := crDefault ;
-
-    { 0 : Imprimer le fichier
-      1 : Demander si on souhaite imprimer le fichier
-      2 : Ne pas imprimer le fichier
-    }
-    case PrintFileWhenSave of
-        0 : Imprimer1Click(Self) ;
-        1 : if Application.MessageBox('Souhaitez-vous imprimer le bordereau pour la banque ?', 'Question', MB_YESNO + MB_ICONQUESTION) = IDYES
-            then
-                Imprimer1Click(Self) ;
-    end ;
-
+    Screen.Cursor := crDefault ;    
 end;
 
 {*******************************************************************************
@@ -1795,15 +1732,11 @@ begin
             end
             else
                 // Lancer le Wizard
-                if CheckEmetteurStart
-                then
-                    Wizard ;
+                Wizard ;
         end
         else
             // Lancer le Wizard
-            if CheckEmetteurStart
-            then
-                Wizard ;
+            Wizard ;
 
         Registre.CloseKey ;
     finally
@@ -2128,30 +2061,20 @@ end ;
 {*******************************************************************************
  * Extrait la ligne de données
  ******************************************************************************}
-function TForm1.ExtraireLigne(ligne : String; NumLigne : Integer) : Boolean ;
+function TForm1.ExtraireLigne(ligne : String) : Boolean ;
 begin
     Result := False ;
 
-    if ligne <> ''
+    if length(ligne) = 160
     then begin
-        if (length(ligne) > 160)
-        then begin
-            Application.MessageBox(Pchar('La ligne n°' + IntToStr(NumLigne) + ' est trop grande (supérieur à 160 caractères) dans le fichier !'#10#13'Traitement arrêté.'), 'Erreur', MB_OK + MB_ICONERROR) ;
-        end
-        else if (length(ligne) < 154)
-        then begin
-            Application.MessageBox(Pchar('La ligne n°' + IntToStr(NumLigne) + ' est trop petit (inférieur à 154 caractères) dans le fichier !'#10#13'Traitement arrêté.'), 'Erreur', MB_OK + MB_ICONERROR) ;
-        end
-        else begin
-            case AnsiIndexStr(ligne[1] + ligne[2], ['03', '06', '08']) of
-                0 : Result := ExtrairePremiereLigne(ligne) ;
-                1 : Result := ExtraireLigneDestinataire(ligne) ;
-                2 : Result := True ;// derniere ligne
-            end ;
+        case AnsiIndexStr(ligne[1] + ligne[2], ['03', '06', '08']) of
+            0 : Result := ExtrairePremiereLigne(ligne) ;
+            1 : Result := ExtraireLigneDestinataire(ligne) ;
+            2 : Result := True ;// derniere ligne
         end ;
     end
     else
-        Result := True ;
+        Application.MessageBox('Lignes trop grandes dans le fichier !', 'Erreur', MB_OK + MB_ICONERROR) ;
 end ;
 
 {*******************************************************************************
@@ -2228,33 +2151,24 @@ end;
 procedure TForm1.OuvrirUnFichier ;
 Var Fichier : TextFile ;
     Buffer : String ;
-    NumLigne : Integer ;
 begin
     Screen.Cursor := crHourGlass ;
 
-    RecentFiles.Add(OpenDialog1.FileName) ;
-    RecentFiles.Write ;
-    CreateMenuRecentFile ;
-
     Caption := 'QuickVirPrel [' + ExtractFileName(OpenDialog1.FileName) + ']' ;
-
+    
     try
         FileMode := fmOpenRead  ;
         AssignFile(Fichier, OpenDialog1.FileName); { Fichier sélectionné dans la boîte de dialogue }
         Reset(Fichier);
-
-        NumLigne := 1 ;
 
         // Lecture de la première ligne
         while not Eof(Fichier) do
         begin
             ReadLn(Fichier, Buffer) ;
 
-            if ExtraireLigne(Buffer, NumLigne) = False
+            if ExtraireLigne(Buffer) = False
             then
                 break ;
-
-            NumLigne := NumLigne + 1 ;
         end ;
     finally
         CloseFile(Fichier) ;
@@ -2414,7 +2328,7 @@ begin
 
     for i := 0 to ListeDestinataireRaisonSociale.Count - 1 do
     begin
-        SauveDestinataireRegistre(i, ListeDestinataireRaisonSociale.Strings[i], ListeDestinataireRIB.Strings[i], ListeDestinataireNomBanque.Strings[i], False) ;
+        SauveDestinataireRegistre(i, ListeEmetteurRaisonSociale.Strings[i], ListeEmetteurRIB.Strings[i], ListeEmetteurNomBanque.Strings[i], False) ;
     end ;
 
     Registre := TRegistry.Create ;
@@ -2853,7 +2767,7 @@ begin
 
     WriteLn(F, '</body></html>') ;
 
-    Screen.Cursor := crDefault ;
+    Screen.Cursor := crDefault ;    
 end ;
 
 {*******************************************************************************
@@ -3041,23 +2955,18 @@ begin
     if SaveDialog1.Execute
     then begin
         DeleteFile(SaveDialog1.FileName) ;
-
+       
         ExportIni := TIniFile.Create(SaveDialog1.FileName);
 
         try
             IsDest := (TMenuItem(Sender).Name = 'Listedestinataires1') ;
             if IsDest
-            then begin
-                nb := ListeDestinataireRaisonSociale.Count ;
-                section := 'DESTINATAIRE'
-            end
-            else begin
+            then
+                nb := ListeDestinataireRaisonSociale.Count
+            else
                 nb := ListeEmetteurRaisonSociale.Count ;
-                section := 'EMETTEUR' ;
-            end ;
 
             ExportIni.WriteInteger('General', 'Nombre', nb) ;
-            ExportIni.WriteString('General', 'Type', section) ;
 
             nb := nb - 1 ;
 
@@ -3088,323 +2997,4 @@ begin
     SaveDialog1.DefaultExt := tmp1 ;
 end;
 
-{*******************************************************************************
- * Importe la liste des destinataires ou émetteurs
- ******************************************************************************}
-procedure TForm1.Listedestinataires2Click(Sender: TObject);
-Var tmp, tmp1 : String ;
-    i, nb, PosRIB, RepRemplacement : Integer ;
-    IsDest : Boolean ;
-    ImportIni: TIniFile;
-    section : String ;
-    error : Boolean ;
-    CurrentRIB, CurrentRS, CurrentNomBanque, CurrentPrel, CurrentVir : String ;
-begin
-    tmp := OpenDialog1.Filter ;
-    tmp1 := OpenDialog1.DefaultExt ;
-
-    OpenDialog1.Filter := 'Fichiers INI (*.ini)|*.ini' ;
-    OpenDialog1.DefaultExt := 'ini' ;
-
-    if openDialog1.Execute
-    then begin
-        ImportIni := TIniFile.Create(OpenDialog1.FileName);
-
-        try
-            IsDest := (TMenuItem(Sender).Name = 'Listedestinataires2') ;
-
-            if IsDest
-            then begin
-                if ImportIni.ReadString('General', 'Type', '') <> 'DESTINATAIRE'
-                then begin
-                    Application.MessageBox('Ce n''est pas un fichier d''import destinataire valide !', 'Erreur', MB_OK + MB_ICONERROR) ;
-                    error := True ;
-                end
-                else
-                    error := False ;
-            end
-            else begin
-                if ImportIni.ReadString('General', 'Type', '') <> 'EMETTEUR'
-                then begin
-                    Application.MessageBox('Ce n''est pas un fichier d''import émetteur valide !', 'Erreur', MB_OK + MB_ICONERROR) ;
-                    error := True ;
-                end
-                else
-                    error := False ;
-            end ;
-
-            if not error
-            then begin
-                nb := ImportIni.ReadInteger('General', 'Nombre', 0) - 1 ;
-
-                for i := 0 to nb do
-                begin
-                    section := 'Ligne_' + IntToStr(i) ;
-
-                    CurrentRIB := ImportIni.ReadString(section, 'RIB', '') ;
-                    CurrentRS := ImportIni.ReadString(section, 'RS', '') ;
-                    CurrentNomBanque := ImportIni.ReadString(section, 'NB', '') ;
-                    CurrentPrel := ImportIni.ReadString(section, 'PREL', '') ;
-                    CurrentVir := ImportIni.ReadString(section, 'VIR', '') ;
-
-                    if IsDest
-                    then begin
-                        PosRIB := ListeDestinataireRIB.IndexOf(CurrentRIB) ;
-
-                        if  (PosRIB > -1)
-                        then begin
-                            // Il existe déjà un destinataire pour ce RIB
-                            RepRemplacement := Application.MessageBox(PChar('Un destinataire existe déjà pour le RIB ''' + CurrentRIB + '''. Voulez-vous le remplacer ?'), 'Attention', MB_YESNO + MB_ICONQUESTION) ;
-
-                            if RepRemplacement = IDYES
-                            then begin
-                                ListeDestinataireRaisonSociale.Strings[PosRIB] := CurrentRS ;
-                                ListeDestinataireRIB.Strings[PosRIB] := CurrentRIB ;
-                                ListeDestinataireNomBanque.Strings[PosRIB] := CurrentNomBanque ;
-                            end ;
-                        end
-                        else begin
-                            ListeDestinataireRaisonSociale.Add(CurrentRS) ;
-                            ListeDestinataireRIB.Add(CurrentRIB) ;
-                            ListeDestinataireNomBanque.Add(CurrentNomBanque) ;
-                        end ;
-
-                    end
-                    else begin
-                        PosRIB := ListeEmetteurRIB.IndexOf(CurrentRIB) ;
-
-                        if  (PosRIB > -1)
-                        then begin
-                            // Il existe déjà un destinataire pour ce RIB
-                            RepRemplacement := Application.MessageBox(PChar('Un émetteur existe déjà pour le RIB ''' + CurrentRIB + '''. Voulez-vous le remplacer ?'), 'Attention', MB_YESNO + MB_ICONQUESTION) ;
-
-                            if RepRemplacement = IDYES
-                            then begin
-                                ListeEmetteurRaisonSociale.Strings[PosRIB] := CurrentRS ;
-                                ListeEmetteurRIB.Strings[PosRIB] := CurrentRIB ;
-                                ListeEmetteurNomBanque.Strings[PosRIB] := CurrentNomBanque ;
-                                ListeEmetteurNumeroPrelevement.Strings[PosRIB] := CurrentPrel ;
-                                ListeEmetteurNumeroVirement.Strings[PosRIB] := CurrentVir ;
-                            end ;
-                        end
-                        else begin
-                            ListeEmetteurRaisonSociale.Add(CurrentRS) ;
-                            ListeEmetteurRIB.Add(CurrentRIB) ;
-                            ListeEmetteurNomBanque.Add(CurrentNomBanque) ;
-                            ListeEmetteurNumeroPrelevement.Add(CurrentPrel) ;
-                            ListeEmetteurNumeroVirement.Add(CurrentVir) ;
-                        end ;
-
-                    end ;
-                end ;
-
-                // Mise à jour registre
-                if IsDest
-                then
-                    MiseAjourRegistreDestinataire
-                else
-                    MiseAjourRegistreEmetteur ; 
-            end ;
-        finally
-            ImportIni.Free ;
-        end ;
-    end ;
-
-    OpenDialog1.Filter := tmp ;
-    OpenDialog1.DefaultExt := tmp1 ;
-end;
-
-{*******************************************************************************
- * Affiche la fenêtre de configuration
- ******************************************************************************}
-procedure TForm1.Configuration1Click(Sender: TObject);
-Var Fenetre : TConfiguration ;
-begin
-    Fenetre := TConfiguration.Create(Self) ;
-    Fenetre.ShowModal ;
-    Fenetre.Free ;
-        
-    ReadConfig ;
-    CreateMenuRecentFile ;
-end;
-
-{*******************************************************************************
- * Lit la config
- ******************************************************************************}
-procedure TForm1.ReadConfig ;
-Var Registre : TRegistry ;
-begin
-    Registre := TRegistry.Create ;
-
-    try
-        Registre.RootKey := HKEY_CURRENT_USER ;
-        Registre.OpenKey(CHEMIN_REGISTRE + '\config', True) ;
-
-        if Registre.ValueExists('PrintFileWhenSave')
-        then
-            PrintFileWhenSave := Registre.ReadInteger('PrintFileWhenSave')
-        else
-            PrintFileWhenSave := 1 ;
-
-        if Registre.ValueExists('CheckEmetteurStart')
-        then
-            CheckEmetteurStart := Registre.ReadBool('CheckEmetteurStart')
-        else
-            CheckEmetteurStart := True ;
-
-
-        if Registre.ValueExists('DisabledRIBChek')
-        then
-            DisabledRIBChek := Registre.ReadBool('DisabledRIBChek')
-        else
-            DisabledRIBChek := False ;
-
-        if Registre.ValueExists('ShowGridLines')
-        then
-            ListView1.GridLines := Registre.ReadBool('ShowGridLines');
-
-        if Registre.ValueExists('ToolBarButtonFlat')
-        then
-            ToolBar1.Flat := Registre.ReadBool('ToolBarButtonFlat') ;
-
-        if Registre.ValueExists('ToolBarShowCaption')
-        then
-            ToolBar1.ShowCaptions := Registre.ReadBool('ToolBarShowCaption') ;
-
-        if Registre.ValueExists('ToolBarList')
-        then
-            ToolBar1.List := Registre.ReadBool('ToolBarList') ;
-
-        if Registre.ValueExists('HotTrack')
-        then
-            ListView1.HotTrack := Registre.ReadBool('HotTrack') ;
-
-        if Registre.ValueExists('HotPoint')
-        then
-            if Registre.ReadBool('HandPoint')
-            then
-                ListView1.HotTrackStyles := ListView1.HotTrackStyles + [htHandPoint]  ;
-
-        if Registre.ValueExists('UnderLineCold')
-        then
-            if Registre.ReadBool('UnderLineCold')
-            then
-                ListView1.HotTrackStyles := ListView1.HotTrackStyles + [htUnderlineCold	]  ;
-
-        if Registre.ValueExists('UnderLineHot')
-        then
-            if Registre.ReadBool('UnderLineHot')
-            then
-                ListView1.HotTrackStyles := ListView1.HotTrackStyles + [htUnderlineHot	]  ;
-
-        Registre.CloseKey ;
-    finally
-        Registre.Free ;
-    end ;
-end ;
-
-{******************************************************************************
- * Créer le menu de fichiers récents
- ******************************************************************************}
-procedure TForm1.CreateMenuRecentFile ;
-Var NewItem: TMenuItem;
-    i, nb : Integer ;
-begin
-    // Si liste existe dèjà
-    NewItem := TMenuItem(FindComponent('RecentsFilesSeparated')) ;
-
-    if NewItem <> nil
-    then begin
-        nb := NewItem.Tag ;
-        NewItem.Free ;
-
-        for i := 1 to nb do
-        begin
-            NewItem := TMenuItem(FindComponent('RC' + IntToStr(i))) ;
-            NewItem.Free ;
-        end ;
-    end ;
-
-    if RecentFiles.Count > 0
-    then begin
-        nb := RecentFiles.Count ;
-
-        // Création de la barre de séparation
-        NewItem := TMenuItem.Create(Self) ;
-        NewItem.Name := 'RecentsFilesSeparated' ;
-        NewItem.Caption := '-' ;
-        NewItem.Tag := nb ;
-        Fichier1.Add(NewItem) ;
-
-        For i := 1 to nb do
-        begin
-            { Menu fichier }
-            NewItem := TMenuItem.Create(Self) ;
-            NewItem.Name := 'RC' + IntToStr(i) ;
-            NewItem.Caption := ExtractFileName(RecentFiles.Give(i)) ;
-            NewItem.Hint := RecentFiles.Give(i) ;
-            NewItem.OnClick := LoadRecentFile ;
-            
-            Fichier1.Add(NewItem) ;
-        end ;
-    end ;
-end ;
-
-{******************************************************************************
- * Procédure appelée quand on clique sur un des menus représentant un fichier
- ******************************************************************************}
-procedure TForm1.LoadRecentFile(Sender: TObject);
-begin
-    OpenDialog1.FileName := (Sender as TMenuItem).Hint ;
-    OuvrirUnFichier ;    
-end ;
-
-{******************************************************************************
- * Procédure qui remet la config à zéro
- ******************************************************************************}
-procedure TForm1.ResetConfig ;
-Var Registre : TRegistry ;
-begin
-    if Application.MessageBox('Êtes-vous sûr de vouloir réinitiliser la config ?', 'Question', MB_YESNO + MB_ICONQUESTION) = IDYES
-    then begin
-        Registre := TRegistry.Create ;
-
-        try
-            Registre.RootKey := HKEY_CURRENT_USER ;
-            Registre.OpenKey(CHEMIN_REGISTRE, True) ;
-
-            Registre.DeleteKey('config') ;
-            Registre.DeleteKey('Destinataire_ListView1') ;
-            Registre.DeleteKey('Emetteur_ListView1') ;
-            Registre.DeleteKey('Form1') ;
-            Registre.DeleteKey('ListView1') ;
-
-            Registre.CloseKey ;
-
-            Registre.OpenKey(CHEMIN_REGISTRE + '\Destinataire', True) ;
-
-            Registre.DeleteValue('Height') ;
-            Registre.DeleteValue('Width') ;
-            Registre.DeleteValue('Top') ;
-            Registre.DeleteValue('Left') ;
-            Registre.DeleteValue('WindowState') ;
-
-            Registre.CloseKey ;
-
-            Registre.OpenKey(CHEMIN_REGISTRE + '\Emetteur', True) ;
-
-            Registre.DeleteValue('Height') ;
-            Registre.DeleteValue('Width') ;
-            Registre.DeleteValue('Top') ;
-            Registre.DeleteValue('Left') ;
-            Registre.DeleteValue('WindowState') ;
-
-            Registre.CloseKey ;
-        finally
-            Registre.Free ;
-        end ;
-    end ;
-end ;
-
 end.
-

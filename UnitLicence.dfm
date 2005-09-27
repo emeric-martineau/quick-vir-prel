@@ -47,6 +47,7 @@ object Licence: TLicence
       Top = 1
       Width = 75
       Height = 25
+      Cancel = True
       Caption = 'Fermer'
       ModalResult = 1
       TabOrder = 0

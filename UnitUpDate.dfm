@@ -30,6 +30,7 @@ object Update: TUpdate
     Top = 40
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'Annuler'
     ModalResult = 2
     TabOrder = 0

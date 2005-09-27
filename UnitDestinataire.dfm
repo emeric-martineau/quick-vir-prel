@@ -58,6 +58,7 @@ object Destinataire: TDestinataire
       Top = 1
       Width = 75
       Height = 25
+      Cancel = True
       Caption = 'Fermer'
       Default = True
       ModalResult = 2

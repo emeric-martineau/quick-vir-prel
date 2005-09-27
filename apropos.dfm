@@ -337,6 +337,7 @@ object FeuilleApropos: TFeuilleApropos
     Top = 240
     Width = 75
     Height = 25
+    Cancel = True
     Caption = 'OK'
     ModalResult = 1
     TabOrder = 0
