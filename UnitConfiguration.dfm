@@ -3,8 +3,8 @@ object Configuration: TConfiguration
   Top = 261
   BorderStyle = bsDialog
   Caption = 'Configuration'
-  ClientHeight = 269
-  ClientWidth = 396
+  ClientHeight = 284
+  ClientWidth = 453
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,7 +18,7 @@ object Configuration: TConfiguration
   TextHeight = 13
   object Button1: TButton
     Left = 8
-    Top = 240
+    Top = 256
     Width = 75
     Height = 25
     Caption = '&OK'
@@ -26,8 +26,8 @@ object Configuration: TConfiguration
     OnClick = Button1Click
   end
   object Button2: TButton
-    Left = 320
-    Top = 240
+    Left = 368
+    Top = 256
     Width = 75
     Height = 25
     Cancel = True
@@ -38,8 +38,8 @@ object Configuration: TConfiguration
   object PageControl1: TPageControl
     Left = 0
     Top = 0
-    Width = 393
-    Height = 233
+    Width = 449
+    Height = 249
     ActivePage = TabSheet1
     TabIndex = 0
     TabOrder = 2
@@ -64,7 +64,7 @@ object Configuration: TConfiguration
       object ImpressionEnregistrement: TComboBox
         Left = 160
         Top = 16
-        Width = 225
+        Width = 273
         Height = 21
         Style = csDropDownList
         ItemHeight = 13
@@ -124,12 +124,22 @@ object Configuration: TConfiguration
       end
       object ResetConfig: TButton
         Left = 96
-        Top = 170
+        Top = 186
         Width = 193
         Height = 25
         Caption = 'R'#233'initialiser configuration par d'#233'faut'
         TabOrder = 6
         OnClick = ResetConfigClick
+      end
+      object AddEuroOnEachLigne: TCheckBox
+        Left = 8
+        Top = 144
+        Width = 441
+        Height = 17
+        Caption = 
+          'Mettre l'#39'indicateur de monnaie sur chaque ligne ('#224' cocher si le ' +
+          'fichier ne fonctionne pas)'
+        TabOrder = 7
       end
     end
     object TabSheet2: TTabSheet

@@ -25,7 +25,7 @@ object FeuilleApropos: TFeuilleApropos
   end
   object Label7: TLabel
     Left = 232
-    Top = 216
+    Top = 224
     Width = 167
     Height = 13
     Cursor = crHandPoint
@@ -41,7 +41,7 @@ object FeuilleApropos: TFeuilleApropos
   end
   object Label6: TLabel
     Left = 232
-    Top = 200
+    Top = 208
     Width = 257
     Height = 13
     Caption = 'Visitez r'#233'guli'#232'rement le site web pour vous tenir '#224' jour :'
@@ -49,7 +49,7 @@ object FeuilleApropos: TFeuilleApropos
   end
   object Label5: TLabel
     Left = 232
-    Top = 160
+    Top = 168
     Width = 294
     Height = 26
     Caption = 
@@ -60,7 +60,7 @@ object FeuilleApropos: TFeuilleApropos
   end
   object Label4: TLabel
     Left = 232
-    Top = 96
+    Top = 108
     Width = 295
     Height = 52
     Caption = 
@@ -74,11 +74,13 @@ object FeuilleApropos: TFeuilleApropos
     Left = 232
     Top = 48
     Width = 297
-    Height = 41
+    Height = 57
     AutoSize = False
     Caption = 
-      'Vous pouvez librement diffuser ce programme de quelques fa'#231'ons q' +
-      'ue ce soit, mais VOUS NE POUVEZ PAS LE MODIFIER.'
+      'Ce logiciel est un logiciel libre; vous pouvez le redistribuer e' +
+      't/ou le modifier selon les termes de la licence GNU General Publ' +
+      'ic License (GNU GPL) publi'#233'es par la Free Software Foundation; e' +
+      'n version 2 ou sup'#233'rieur.'
     Transparent = True
     WordWrap = True
   end

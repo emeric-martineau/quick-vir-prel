@@ -25,14 +25,11 @@
  *
  *
  *
- *       Version 2.1
+ *       TODO
  *       - pouvoir configurer où sont enregistrer les informations Emetteur/Destinataire :
  *             Information propre à chaque utilisateur (HKCU)
  *             Information commun à tous les utilisateurs de cet ordinateur (HKLM)
  *       - gérer un apperçu avant impression
- *
- *
- *       Version 1.4
  *       - Faire une version en réseau
  *}
 {
@@ -129,7 +126,16 @@
              - pouvoir réinitiliser les paramètres par la lignes de commandes /resetconfig
              - Mettre sablier quand nécessaire,
              - prise en compte des lignes plus courtes dans le fichier généré par certain programme,
-             - amélioration du signalement d'erreur à l'oouverture d'un fichier,
+             - amélioration du signalement d'erreur à l'ouverture d'un fichier,
+
+             V2.1.1
+             - correction d'un bug de lecture,
+             - possibilité d'enlever le signe monnaitaire sur chaque ligne de montant qui pose problème
+               pour certaine banque,
+             - correction du bug de tri de liste,
+             - ajout de l'extention automatiquement lors de l'export,
+             - suppresion du nom de fichier dans la boite de dialogue d'enregistrement lorsqu'on créer
+               nouveau fichier,  
 
     A TERMINER :
 
@@ -343,7 +349,8 @@ type
     ListeDestinataireRIB : TStringList ;
     ListeDestinataireNomBanque : TStringList ;
     DisabledRIBChek : Boolean ;
-    RecentFiles : TRecentFiles ;    
+    RecentFiles : TRecentFiles ;
+    AddEuroOnEachLigne : Boolean ;    
     // Fonctions
     function  CheckRIB(RIB : String) : Boolean ;
     function  CheckVirgule(chaine : string) : boolean ;
@@ -841,6 +848,7 @@ function TForm1.NouveauFichier : Boolean ;
         ListView1.Clear ;
         SetModif(False) ;
         Form1.Caption := 'QuickVirPrel [Sans nom]' ;
+        SaveDialog1.FileName := 'Sans nom.txt' ;
     end ;
 begin
     Result := True ;
@@ -915,6 +923,7 @@ Var Fichier : TextFile ;
     i : Integer ;
     Total : Extended ;
     RS, RIB : String ;
+    tmp : String ;
 
     function DateAFB : String ;
     Var temp : String ;
@@ -997,7 +1006,13 @@ Begin
 
             Total := Total + StrToFloat(ListView1.Items[i].SubItems[2]) ;
 
-            WriteLn(Fichier, Ligne2 + '        ' + Ref + Completer(ListView1.Items[i].SubItems[3], 12) + Completer(ListView1.Items[i].Caption ,24) + Completer(ListView1.Items[i].SubItems[1], 20) + '      E     ' + Guichet + Compte + CompleterMontantInterne(ListView1.Items[i].SubItems[2]) + Completer(ListView1.Items[i].SubItems[4], 31) + Banque + '      ') ;
+            if AddEuroOnEachLigne
+            then
+                tmp := '      E     '
+            else
+                tmp := '            ' ;
+
+            WriteLn(Fichier, Ligne2 + '        ' + Ref + Completer(ListView1.Items[i].SubItems[3], 12) + Completer(ListView1.Items[i].Caption ,24) + Completer(ListView1.Items[i].SubItems[1], 20) + tmp + Guichet + Compte + CompleterMontantInterne(ListView1.Items[i].SubItems[2]) + Completer(ListView1.Items[i].SubItems[4], 31) + Banque + '      ') ;
         end ;
 
         // Avant dernière ligne
@@ -1162,6 +1177,10 @@ begin
                 FontDialog1.Font.Style :=  FontDialog1.Font.Style + [fsStrikeOut];
         end ;
 
+        if Registre.ValueExists('UnderLineHot')
+        then
+            AddEuroOnEachLigne := Registre.ReadBool('AddEuroOnEachLigne') ;
+
         Registre.CloseKey ;
     finally
         Registre.Free ;
@@ -1216,14 +1235,16 @@ var i, j, NumSubItem : Integer ;
     end ;
 begin
     { Si on clique sur la même colone, on inverse l'ordre }
-    if Colonne = (Column.ID - 6)
+    //if Colonne = (Column.ID - 6)
+    if Colonne = Column.ID
     then
         OrdreCroissant := not OrdreCroissant
     else
         OrdreCroissant := True ;
 
     { Mémorise la colone }
-    Colonne := Column.ID - 6 ;
+    //Colonne := Column.ID - 6 ;
+    Colonne := Column.ID ;
 
     { Créer une liste view }
     NewListView := TListView.Create(Self) ;
@@ -1239,7 +1260,7 @@ begin
     temp := TListItems.Create(NewListView) ;
 
     {** On trie la première colone **}
-    if Column.ID = 6
+    if Column.ID = 0
     then begin
         { Pour chaque élement de la liste qu'on doit trier }
         For i := 0 to (Sender as TListView).Items.Count - 1 do
@@ -1287,9 +1308,12 @@ begin
         end ;
     end
     else begin
-       { Mémorise la colone dans une variable évitant ainsi de recalculer a
-         chaque fois et gagnant donc du temps en exécution }
-        NumSubItem := Column.ID - 6 ;
+        { Mémorise la colone dans une variable évitant ainsi de recalculer a
+          chaque fois et gagnant donc du temps en exécution }
+        //NumSubItem := Column.ID - 6 ;
+        { -1 car c'est les sous-item or le premier item est 0 alors que son
+          numéro Column est 1 }
+        NumSubItem := Column.ID - 1 ;
 
         { Pour chaque élement de la liste qu'on doit trier }
         For i := 0 to (Sender as TListView).Items.Count - 1 do
@@ -2189,9 +2213,10 @@ begin
         // Ajoute la virgule
         temp := StrNCopyN(103, 118, ligne) ;
         temp := temp + temp[16] ;
-        temp[15] := temp[14] ;
+        temp[16] := temp[15] ;
         temp[15] := ',' ;
 
+        
         // Permet de se débarraer des 0 devant
         temp := FloatToStr(StrToFloat(temp)) ;
 
@@ -2983,6 +3008,8 @@ begin
             end ;
     end ;
 
+    SaveDialog1.FileName := StrNCopyN(1, length(SaveDialog1.FileName) - length(ExtractFileExt(SaveDialog1.FileName)), SaveDialog1.FileName) ;
+    SaveDialog1.FileName := SaveDialog1.FileName + '.' + SaveDialog1.DefaultExt ;
 
     if SaveDialog1.Execute
     then begin

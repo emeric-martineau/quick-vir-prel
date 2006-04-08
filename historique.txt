@@ -1,5 +1,13 @@
 HISTORIQUE DES VERSIONS DE QUICKVIRPREL
 =======================================
+version 2.1.1 : (09/04/2006)
+  - correction d'un bug de lecture,
+  - possibilité d'enlever le signe monnaitaire sur chaque ligne de montant qui pose problème pour certaine banque,
+  - correction du bug de tri de liste,
+  - ajout de l'extention automatiquement lors de l'export,
+  - suppresion du nom de fichier dans la boite de dialogue d'enregistrement lorsqu'on créer nouveau fichier,
+  - changement de licence. Passage en GNU GPL v2.
+
 version 2.1 : (28/09/2005)
   - Ajout d'un utilitaire de calcule de clef RIB,
   - Correction d'un bug lors de l'impression en ayant un émetteur non dans la liste,

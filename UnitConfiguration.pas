@@ -47,6 +47,7 @@ type
     UnderlineCold: TCheckBox;
     UnderlineHot: TCheckBox;
     ResetConfig: TButton;
+    AddEuroOnEachLigne: TCheckBox;
     procedure ShowCaptionClick(Sender: TObject);
     procedure HotTrackClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -116,6 +117,8 @@ begin
 
         Registre.WriteBool('UnderLineHot', UnderLineHot.Checked) ;
 
+        Registre.WriteBool('AddEuroOnEachLigne', AddEuroOnEachLigne.Checked) ;
+
         Registre.CloseKey ;
     finally
         Registre.Free ;
@@ -178,6 +181,10 @@ begin
         if Registre.ValueExists('UnderLineHot')
         then
             UnderLineHot.Checked := Registre.ReadBool('UnderLineHot') ;
+
+        if Registre.ValueExists('UnderLineHot')
+        then
+            AddEuroOnEachLigne.Checked := Registre.ReadBool('AddEuroOnEachLigne') ;
 
         Registre.CloseKey ;
     finally
