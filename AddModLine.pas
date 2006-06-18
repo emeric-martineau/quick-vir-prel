@@ -195,9 +195,9 @@ Const virgule : boolean = False ;
 begin
     if Key > #31
     then begin
-        if (Key in ['0'..'9', '.', ','])
+        if (Key in ['0'..'9', '.', ',', DecimalSeparator])
         then begin
-            if (Key in ['.', ','])
+            if (Key in ['.', ',', DecimalSeparator])
             then begin
                 if (Length(Destinataire_Montant.Text) > 0)
                 then

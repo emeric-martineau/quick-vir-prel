@@ -432,22 +432,50 @@ object Form1: TForm1
         end
         object Listedestinataires1: TMenuItem
           Caption = 'Liste destinataires'
-          OnClick = Listedestinataires1Click
+          object FichierIni3: TMenuItem
+            Caption = 'Fichier Ini'
+            OnClick = Listedestinataires1Click
+          end
+          object FichierExporterDestinataireCSV: TMenuItem
+            Caption = 'Fichier CSV'
+            OnClick = ExporterEmetteurDestinataireCSV1Click
+          end
         end
         object Listemetteurs1: TMenuItem
           Caption = 'Liste '#233'metteurs'
-          OnClick = Listedestinataires1Click
+          object FichierIni4: TMenuItem
+            Caption = 'Fichier Ini'
+            OnClick = Listedestinataires1Click
+          end
+          object FichierExporterEmetteurCSV: TMenuItem
+            Caption = 'Fichier CSV'
+            OnClick = ExporterEmetteurDestinataireCSV1Click
+          end
         end
       end
       object Importer1: TMenuItem
         Caption = 'I&mporter'
         object Listedestinataires2: TMenuItem
           Caption = 'Liste &destinataires'
-          OnClick = Listedestinataires2Click
+          object FichierINI1: TMenuItem
+            Caption = 'Fichier INI'
+            OnClick = Listedestinataires2Click
+          end
+          object FichierImporterDestinataireCSV: TMenuItem
+            Caption = 'Fichier CSV'
+            OnClick = ImporterEmetteurDestinataireCSV1Click
+          end
         end
         object Listemetteurs2: TMenuItem
           Caption = 'Liste '#233'&metteurs'
-          OnClick = Listedestinataires2Click
+          object FichierIni2: TMenuItem
+            Caption = 'Fichier Ini'
+            OnClick = Listedestinataires2Click
+          end
+          object FichierImporterEmetteurCSV: TMenuItem
+            Caption = 'Fichier CSV'
+            OnClick = ImporterEmetteurDestinataireCSV1Click
+          end
         end
       end
       object N5: TMenuItem
@@ -547,6 +575,7 @@ object Form1: TForm1
       end
       object Supprimer3: TMenuItem
         Caption = '&Supprimer'
+        OnClick = Modifier3Click
       end
     end
     object Divres1: TMenuItem

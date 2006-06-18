@@ -1,12 +1,15 @@
 HISTORIQUE DES VERSIONS DE QUICKVIRPREL
 =======================================
+version 2.1.2.2 : (06/02/2008)
+  - possibiliter d'exporter et d'importer les destinataires vers/depuis un fichier csv,
+
 version 2.1.2.1 : (19/06/2006) 
-- ajout du completage automatique du montant lorsqu'il n'y a qu'un chiffre après la virgule,
+  - ajout du completage automatique du montant lorsqu'il n'y a qu'un chiffre après la virgule,
 
 version 2.1.2 : (19/06/2006)
-- correction d'un problème de convertion de nombre si le symbole décimal était différent de la virgule,
-- correction d'un problème de convertion de clef RIB si elle contenait des lettres, 
-- correction d'un bug qui ne faisait pas toujours apparaitre le bouton autre...,
+  - correction d'un problème de convertion de nombre si le symbole décimal était différent de la virgule,
+  - correction d'un problème de convertion de clef RIB si elle contenait des lettres, 
+  - correction d'un bug qui ne faisait pas toujours apparaitre le bouton autre...,
                
 version 2.1.1 : (09/04/2006)
   - correction d'un bug de lecture,

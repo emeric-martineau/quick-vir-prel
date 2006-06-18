@@ -143,7 +143,25 @@
              - correction d'un problème de convertion de clef RIB si elle contenait
                des lettres,
              - correction d'un bug qui ne faisait pas toujours apparaitre le bouton autre...,
-             
+
+             v2.1.1 :
+             - correction d'un bug de lecture,
+             - possibilité d'enlever le signe monnaitaire sur chaque ligne de montant qui pose problème pour certaine banque,
+             - correction du bug de tri de liste,
+             - ajout de l'extention automatiquement lors de l'export,
+             - suppresion du nom de fichier dans la boite de dialogue d'enregistrement lorsqu'on créer nouveau fichier,
+             - changement de licence. Passage en GNU GPL v2.
+
+             v2.1.2 :
+             - correction d'un problème de convertion de nombre si le symbole décimal était différent de la virgule,
+             - correction d'un problème de convertion de clef RIB si elle contenait des lettres,
+             - correction d'un bug qui ne faisait pas toujours apparaitre le bouton autre...,
+
+             v2.1.2.1 :
+             - ajout du completage automatique du montant lorsqu'il n'y a qu'un chiffre après la virgule,
+
+             v2.1.2.2 :
+             - possibiliter d'exporter et d'importer les destinataires vers/depuis un fichier csv,
 
     A TERMINER :
 
@@ -253,6 +271,14 @@ type
     Listemetteurs2: TMenuItem;
     N7: TMenuItem;
     Configuration1: TMenuItem;
+    FichierINI1: TMenuItem;
+    FichierIni2: TMenuItem;
+    FichierImporterEmetteurCSV: TMenuItem;
+    FichierImporterDestinataireCSV: TMenuItem;
+    FichierIni3: TMenuItem;
+    FichierIni4: TMenuItem;
+    FichierExporterDestinataireCSV: TMenuItem;
+    FichierExporterEmetteurCSV: TMenuItem;
     procedure ajouterClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ComboBox2Change(Sender: TObject);
@@ -301,6 +327,8 @@ type
     procedure Listedestinataires1Click(Sender: TObject);
     procedure Listedestinataires2Click(Sender: TObject);
     procedure Configuration1Click(Sender: TObject);
+    procedure ExporterEmetteurDestinataireCSV1Click(Sender: TObject);
+    procedure ImporterEmetteurDestinataireCSV1Click(Sender: TObject);
 //    procedure OnMessage(var Msg: tagMSG; var Handled: Boolean);
   private
     { Déclarations privées }
@@ -343,7 +371,9 @@ type
     procedure ExporterEnXML(var F: Text) ;
     procedure ExporterEnCSV(var F: TextFile; Separateur : String);
     procedure CreateMenuRecentFile ;
-    procedure LoadRecentFile(Sender: TObject);        
+    procedure LoadRecentFile(Sender: TObject);
+    function ExtractString(Text : string; startpos : integer; var endpos : integer; separator : string) : string ;
+    function DetectSeparatorOfField(text : String) : string ;
   public
     { Déclarations publiques }
     // Emetteur
@@ -424,7 +454,7 @@ begin
 
     AjouterModifierLigne.Free ;
 
-    Screen.Cursor := crDefault ;    
+    Screen.Cursor := crDefault ;
 end;
 
 {*******************************************************************************
@@ -966,7 +996,7 @@ Var Fichier : TextFile ;
 
         For i := 1 to Length(Texte) do
         begin
-            if Texte[i] <> ','
+            if Texte[i] <> DecimalSeparator
             then
                 Result := Result + Texte[i] ;
         end ;
@@ -2252,9 +2282,9 @@ end ;
  ******************************************************************************}
 procedure TForm1.Ouvrir1Click(Sender: TObject);
 begin
-    if NouveauFichier
+    if Opendialog1.Execute
     then
-        if Opendialog1.Execute
+        if NouveauFichier
         then
             OuvrirUnFichier ;
 end;
@@ -3041,7 +3071,7 @@ begin
                                 else
                                     Feuille.Separateur.Text := Feuille.SeparateurList.Text ;
                             end ;
-                            Caption := Feuille.Separateur.Text ;
+
                             ExporterEnCSV(F, Feuille.Separateur.Text) ;
                         end ;
                         Feuille.Free ;
@@ -3461,6 +3491,212 @@ begin
         1  : Result := chaine + '0' ;
         2  : Result := chaine ;
         -1 : Result := chaine + DecimalSeparator + '00' ;
+    end ;
+end ;
+
+{*******************************************************************************
+ * Extrait une chaine suivant un séparateur
+ ******************************************************************************}
+function TForm1.ExtractString(Text : string; startpos : integer; var endpos : integer; separator : string) : string ;
+var i : Integer ;
+begin
+    Result := '' ;
+
+    endpos := startpos ;
+
+    Result := Copy(Text, startpos, length(text) - startpos + 1) ;
+
+    i := Pos(separator, Result) ;
+
+    if i <> 0
+    then begin
+        Inc(endpos, i + length(separator) - 1) ;
+
+        Result := Copy(Result, 1, i - 1) ;
+    end ;
+end ;
+
+{*******************************************************************************
+ * Détect le séparateur de champ
+ ******************************************************************************}
+function TForm1.DetectSeparatorOfField(text : String) : string ;
+var i : Integer ;
+begin
+    for i := 1 to Length(text) do
+    begin
+        if not ((text[i] in ['a'..'z']) or (text[i] in ['A'..'Z']) or (text[i] in ['0'..'9']) or (text[i] = ' ') or (text[i] = '_') or (text[i] = '-'))
+        then begin
+            Result := Text[i] ;
+            break ;
+        end ;
+    end ;
+end ;
+
+{*******************************************************************************
+ * Exporte la liste de destinataire ou des émetteurs en CSV
+ ******************************************************************************}
+procedure TForm1.ExporterEmetteurDestinataireCSV1Click(Sender: TObject);
+var F : TextFile ;
+    Feuille : TCSV ;
+    i : Integer ;
+begin
+    if TWinControl(Sender).Name = 'FichierExporterEmetteurCSV'
+    then
+        SaveDialog1.FileName := 'export_emetteur.csv'
+    else
+        SaveDialog1.FileName := 'export_destinataire.csv' ;
+
+    SaveDialog1.Filter := 'Fichiers CSV (*.csv)|*.csv' ;
+    SaveDialog1.DefaultExt := 'csv' ;
+
+    if SaveDialog1.Execute
+    then begin
+        Feuille := TCSV.Create(Self) ;
+
+        if Feuille.ShowModal = mrOK
+        then begin
+            case AnsiIndexStr(Feuille.SeparateurList.Text, ['Virgule', 'Tabulation', 'Point-virgule', 'Autre...']) of
+                0 : Feuille.Separateur.Text := ',' ;
+                1 : Feuille.Separateur.Text := #$09 ;
+                2 : Feuille.Separateur.Text := ';' ;
+                3 : ;
+                else
+                    Feuille.Separateur.Text := Feuille.SeparateurList.Text ;
+            end ;
+
+            Screen.Cursor := crHourGlass ;
+
+            AssignFile(F, SaveDialog1.FileName) ;
+            FileMode := fmOpenWrite ;
+
+            try
+                ReWrite(F) ;
+
+                if TWinControl(Sender).Name = 'FichierExporterEmetteurCSV'
+                then begin
+                    { Entête }
+                    Write(F, 'Raison sociale' + Feuille.Separateur.Text) ;
+                    Write(F, 'Banque' + Feuille.Separateur.Text) ;
+                    Write(F, 'RIB' + Feuille.Separateur.Text) ;
+                    Write(F, 'Numéro virement' + Feuille.Separateur.Text) ;
+                    WriteLn(F, 'Numéro prélèvement') ;
+
+                    For i := 0 to ListeEmetteurRaisonSociale.Count - 1 do
+                    begin
+                        WriteLn(F,
+                                ListeEmetteurRaisonSociale.Strings[i] + Feuille.Separateur.Text +
+                                ListeEmetteurNomBanque.Strings[i] + Feuille.Separateur.Text +
+                                ListeEmetteurRIB.Strings[i] + Feuille.Separateur.Text +
+                                ListeEmetteurNumeroVirement.Strings[i] + Feuille.Separateur.Text +
+                                ListeEmetteurNumeroPrelevement.Strings[i]
+                        ) ;
+                    end ;
+                end
+                else begin
+                    { Entête }
+                    Write(F, 'Raison sociale' + Feuille.Separateur.Text) ;
+                    Write(F, 'Banque' + Feuille.Separateur.Text) ;
+                    WriteLn(F, 'RIB') ;
+
+                    for i := 0 to ListeDestinataireRaisonSociale.Count - 1 do
+                    begin
+                        WriteLn(F,
+                                ListeDestinataireRaisonSociale.Strings[i] + Feuille.Separateur.Text +
+                                ListeDestinataireNomBanque.Strings[i] + Feuille.Separateur.Text +
+                                ListeDestinataireRIB.Strings[i]
+                        );
+                    end ;
+                end ;
+
+                CloseFile(F) ;
+            finally
+                Screen.Cursor := crDefault ;
+            end ;
+        end ;
+
+        Feuille.Free ;
+    end ;
+end;
+
+{*******************************************************************************
+ * Exporte la liste de destinataire ou des émetteurs en CSV
+ ******************************************************************************}
+procedure TForm1.ImporterEmetteurDestinataireCSV1Click(Sender: TObject);
+var F : TextFile ;
+    Ligne : String ;
+    Champ : String ;
+    Position : Integer ;
+    Separator : String ;
+begin
+    if TWinControl(Sender).Name = 'FichierImporterEmetteurCSV'
+    then
+        OpenDialog1.FileName := 'import_emetteur.csv'
+    else
+        OpenDialog1.FileName := 'import_destinataire.csv' ;
+
+    OpenDialog1.Filter := 'Fichiers CSV (*.csv)|*.csv|Tous fichiers|*.*' ;
+    OpenDialog1.DefaultExt := 'csv' ;
+
+    if OpenDialog1.Execute
+    then begin
+        Screen.Cursor := crHourGlass ;
+
+        AssignFile(F, OpenDialog1.FileName) ;
+
+        try
+            FileMode := fmOpenRead ;
+            Reset(F) ;
+
+            { La première ligne contient l'entête }
+            ReadLn(F, Ligne) ;
+
+            Separator := DetectSeparatorOfField(Ligne) ;
+
+            while not EOF(F) do
+            begin
+                ReadLn(F, Ligne) ;
+
+                if TWinControl(Sender).Name = 'FichierImporterEmetteurCSV'
+                then begin
+                    Champ := ExtractString(Ligne, 1, position, Separator) ;
+                    ListeEmetteurRaisonSociale.Add(Champ) ;
+
+                    Champ := ExtractString(Ligne, position, position, Separator) ;
+                    ListeEmetteurNomBanque.Add(Champ) ;
+
+                    Champ := ExtractString(Ligne, position, position, Separator) ;
+                    ListeEmetteurRIB.Add(Champ) ;
+
+                    Champ := ExtractString(Ligne, position, position, Separator) ;
+                    ListeEmetteurNumeroVirement.Add(Champ) ;
+
+                    Champ := ExtractString(Ligne, position, position, Separator) ;
+                    ListeEmetteurNumeroPrelevement.Add(Champ) ;
+                end
+                else begin
+                    Champ := ExtractString(Ligne, 1, position, Separator) ;
+                    ListeDestinataireRaisonSociale.Add(Champ) ;
+
+                    Champ := ExtractString(Ligne, position, position, Separator) ;
+                    ListeDestinataireNomBanque.Add(Champ) ;
+
+                    Champ := ExtractString(Ligne, position, position, Separator) ;
+                    ListeDestinataireRIB.Add(Champ) ;
+
+                end ;
+            end ;
+
+            CloseFile(F) ;
+
+            if TWinControl(Sender).Name = 'ImporterEmetteurCSV1'
+            then
+                MiseAJourRegistreEmetteur
+            else
+                MiseAjourRegistreDestinataire ;
+        finally
+            Screen.Cursor := crDefault ;
+        end ;
+
     end ;
 end ;
 

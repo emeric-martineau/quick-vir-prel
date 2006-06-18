@@ -56,13 +56,17 @@ HostApplication=
 Launcher=
 UseLauncher=0
 DebugCWD=
+[Language]
+ActiveLang=
+ProjectLang=
+RootDir=
 [Version Info]
 IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=2
 MinorVer=1
 Release=2
-Build=1
+Build=2
 Debug=0
 PreRelease=0
 Special=0
@@ -73,11 +77,14 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=
 FileDescription=Programme de création de fichier de Virement/Prélévement au format AFB.
-FileVersion=2.1.2.1
+FileVersion=2.1.2.2
 InternalName=
 LegalCopyright=Copyright (C) MARTINEAU Emeric
 LegalTrademarks=
 OriginalFilename=
 ProductName=QuickVirPrel
-ProductVersion=2.1.2.1
+ProductVersion=2.1.2.2
 Comments=Programme diffusé sous licence GPL
+[Excluded Packages]
+c:\program files\borland\delphi6\Projects\Bpl\WinEssential.bpl=WinEssential components for Delphi 4/6
+c:\program files\borland\delphi6\Projects\Bpl\WinEssential_d6.bpl=(sans titre)
