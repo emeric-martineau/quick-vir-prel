@@ -116,7 +116,7 @@ begin
     // Ajoute une virgule et 2 0 si y en a pas
     if not Form1.CheckVirgule(Destinataire_Montant.Text)
     then
-        Destinataire_Montant.Text := Destinataire_Montant.Text + ',00' ;
+        Destinataire_Montant.Text := Destinataire_Montant.Text + DecimalSeparator + '00' ;
 end;
 
 {*******************************************************************************
@@ -176,7 +176,7 @@ Const virgule : boolean = False ;
 
         For i:= 1 to j do
         begin
-            if Destinataire_Montant.Text[i] = ','
+            if Destinataire_Montant.Text[i] = DecimalSeparator
             then
                 Virgule := True ;
 
@@ -197,7 +197,7 @@ begin
             then begin
                 if (Length(Destinataire_Montant.Text) > 0)
                 then
-                    Key := ','
+                    Key := DecimalSeparator
                 else
                     Key := #0 ;
 

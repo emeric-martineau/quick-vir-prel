@@ -96,9 +96,9 @@ object AjoutEmetteur: TAjoutEmetteur
   object Emetteur_RIB: TMaskEdit
     Left = 135
     Top = 104
-    Width = 189
+    Width = 187
     Height = 21
-    EditMask = '!00000\-00000\->AAAAAAAAAAA<\-00;1;_'
+    EditMask = '!00000\-00000\->AAAAAAAAAAA\-AA;1;_'
     MaxLength = 26
     TabOrder = 4
     Text = '     -     -           -  '

@@ -106,9 +106,9 @@ object AjouterModifierLigne: TAjouterModifierLigne
   object Destinataire_RIB: TMaskEdit
     Left = 8
     Top = 152
-    Width = 189
+    Width = 185
     Height = 21
-    EditMask = '!00000\-00000\->AAAAAAAAAAA<\-00;1;_'
+    EditMask = '!00000\-00000\->AAAAAAAAAAA\-AA;1;_'
     MaxLength = 26
     TabOrder = 5
     Text = '     -     -           -  '

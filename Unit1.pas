@@ -135,7 +135,15 @@
              - correction du bug de tri de liste,
              - ajout de l'extention automatiquement lors de l'export,
              - suppresion du nom de fichier dans la boite de dialogue d'enregistrement lorsqu'on créer
-               nouveau fichier,  
+               nouveau fichier,
+
+             V2.1.2
+             - correction d'un problème de convertion de nombre si le symbole
+               décimal était différent de la virgule,
+             - correction d'un problème de convertion de clef RIB si elle contenait
+               des lettres,
+             - correction d'un bug qui ne faisait pas toujours apparaitre le bouton autre...,
+             
 
     A TERMINER :
 
@@ -503,6 +511,9 @@ begin
 
     // Créer le menu des fichiers récents
     CreateMenuRecentFile ;
+
+    // permet de faire apparaitre le bouton autre...
+    ListeEmetteurComboBoxChange(ListeEmetteurComboBox) ;
 (*
     Application.OnMessage := OnMessage;
 
@@ -695,7 +706,7 @@ end ;
 function TForm1.ExtraireClefRIB(RIB : String) : ShortInt ;
 begin
   try
-    Result := StrToInt(RIB[25] + RIB[26]) ;
+    Result := StrToInt(StrNCopyNWithValeur(25, 26, RIB)) ;
   except
     on EConvertError do Result := 0 ;
     on ERangeError  do Result := 0 ;
@@ -908,7 +919,7 @@ begin
 
     For i:= 1 to j do
     begin
-        if Chaine[i] = ','
+        if Chaine[i] = DecimalSeparator
         then
             Result := True ;
     end ;
@@ -1000,9 +1011,14 @@ Begin
         // Lignes
         For i := 0 to ListView1.Items.Count -1 do
         begin
-            Banque := StrNCopyNWithValeur(1, 5, ListView1.Items[i].SubItems[0]) ;
-            Guichet := StrNCopyNWithValeur(7, 11, ListView1.Items[i].SubItems[0]) ;
-            Compte := StrNCopyNWithValeur(13, 23, ListView1.Items[i].SubItems[0]) ;
+            // Pose problème pour Le Crédit Lyonnait et La Poste
+            //Banque := StrNCopyNWithValeur(1, 5, ListView1.Items[i].SubItems[0]) ;
+            //Guichet := StrNCopyNWithValeur(7, 11, ListView1.Items[i].SubItems[0]) ;
+            //Compte := StrNCopyNWithValeur(13, 23, ListView1.Items[i].SubItems[0]) ;
+
+            Banque := StrNCopyN(1, 5, ListView1.Items[i].SubItems[0]) ;
+            Guichet := StrNCopyN(7, 11, ListView1.Items[i].SubItems[0]) ;
+            Compte := StrNCopyN(13, 23, ListView1.Items[i].SubItems[0]) ;
 
             Total := Total + StrToFloat(ListView1.Items[i].SubItems[2]) ;
 
