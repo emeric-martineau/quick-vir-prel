@@ -374,7 +374,8 @@ type
     procedure GetWindowProperties(Fenetre : TForm) ;
     function  CalculerClefRIB(RIB : String) : ShortInt ;
     procedure ReadConfig ;
-    procedure ResetConfig ;    
+    procedure ResetConfig ;
+    function  CheckTwoNumberAfterDecimalSeparator(chaine : String) : String ;        
   end;
 
 var
@@ -956,10 +957,6 @@ Var Fichier : TextFile ;
     function CompleterMontantInterne(Texte : String) : String ;
     Var i : Integer ;
     begin
-        if not CheckVirgule(Texte)
-        then
-            Texte := Texte + ',00' ;
-
         Result := '' ;
 
         For i := 1 to 17 - Length(Texte) do
@@ -1031,8 +1028,11 @@ Begin
             WriteLn(Fichier, Ligne2 + '        ' + Ref + Completer(ListView1.Items[i].SubItems[3], 12) + Completer(ListView1.Items[i].Caption ,24) + Completer(ListView1.Items[i].SubItems[1], 20) + tmp + Guichet + Compte + CompleterMontantInterne(ListView1.Items[i].SubItems[2]) + Completer(ListView1.Items[i].SubItems[4], 31) + Banque + '      ') ;
         end ;
 
+        // Permet d'avoir tjs deux chiffres après la virgule
+        tmp := CheckTwoNumberAfterDecimalSeparator(FloatToStr(Total)) ;
+
         // Avant dernière ligne
-        WriteLn(Fichier, Ligne3 + '        ' + Ref + '                                                                                    ' + CompleterMontantInterne(FloatToStr(Total)) + '                                          ') ;
+        WriteLn(Fichier, Ligne3 + '        ' + Ref + '                                                                                    ' + CompleterMontantInterne(tmp) + '                                          ') ;
         Result := 0;
     finally
         CloseFile(Fichier);
@@ -2236,10 +2236,6 @@ begin
         // Permet de se débarraer des 0 devant
         temp := FloatToStr(StrToFloat(temp)) ;
 
-        if not Form1.CheckVirgule(temp)
-        then
-            temp := temp + ',00' ;
-
         ListItem.SubItems.Add(temp) ;   // Montant
 
         ListItem.SubItems.Add(TrimRight(StrNCopyN(19, 30, ligne))) ;  // référence
@@ -2816,10 +2812,6 @@ end ;
 function TForm1.CompleterMontant(Texte : String; NoSpace : Boolean) : String ;
 Var i : Integer ;
 begin
-    if not CheckVirgule(Texte)
-    then
-        Texte := Texte + ',00' ;
-
     Result := '' ;
 
     if not NoSpace
@@ -3446,6 +3438,29 @@ begin
         finally
             Registre.Free ;
         end ;
+    end ;
+end ;
+
+{*******************************************************************************
+ * Regarde s'il y a deux chiffres après la virgule
+ ******************************************************************************}
+function TForm1.CheckTwoNumberAfterDecimalSeparator(chaine : String) : String ;
+var i, j : Integer ;
+begin
+    j := Length(Chaine) ;
+
+    For i:= 1 to j do
+    begin
+        if Chaine[i] = DecimalSeparator
+        then
+            break ;
+    end ;
+
+    case j - i of
+        0  : Result := chaine + '00' ;
+        1  : Result := chaine + '0' ;
+        2  : Result := chaine ;
+        -1 : Result := chaine + DecimalSeparator + '00' ;
     end ;
 end ;
 

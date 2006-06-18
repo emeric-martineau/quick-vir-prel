@@ -114,9 +114,13 @@ begin
     end ;
 
     // Ajoute une virgule et 2 0 si y en a pas
+    {
     if not Form1.CheckVirgule(Destinataire_Montant.Text)
     then
         Destinataire_Montant.Text := Destinataire_Montant.Text + DecimalSeparator + '00' ;
+    }
+    // Vérifie qu'il y a bien deux chiffres après la virgule
+    Destinataire_Montant.Text := Form1.CheckTwoNumberAfterDecimalSeparator(Destinataire_Montant.Text) ;
 end;
 
 {*******************************************************************************
