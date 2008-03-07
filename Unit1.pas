@@ -163,6 +163,8 @@
              v2.1.2.2 :
              - possibiliter d'exporter et d'importer les destinataires vers/depuis un fichier csv,
 
+             v2.1.2.3 :
+             - conversion des chiffres dans les numéros de compte alors qu'il ne faut pas,			 
     A TERMINER :
 
 }
@@ -1019,7 +1021,7 @@ Begin
 
     Banque := StrNCopyNWithValeur(1, 5, RIB) ;
     Guichet := StrNCopyNWithValeur(7, 11, RIB) ;
-    Compte := StrNCopyNWithValeur(13, 23, RIB) ;
+    Compte := StrNCopyN(13, 23, RIB) ;
 
     Total := 0 ;
 

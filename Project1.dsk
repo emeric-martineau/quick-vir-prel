@@ -1,23 +1,23 @@
 [Closed Files]
-File_0=SourceModule,'c:\program files\borland\delphi6\source\vcl\Mask.pas',0,1,780,1,801,0,0
-File_1=SourceModule,'Y:\Outils\Delphi6\Composants\BZComposants\XPMenu.pas',0,1,3193,1,3220,0,0
-File_2=SourceModule,'Y:\PROJETS\DELPHI6\SUAVE\client\UnitCheckAlert.pas',0,1,52,27,57,0,0
-File_3=SourceModule,'Y:\PROJETS\DELPHI6\MutualiaGRC\concat\ConcatFlux\FConcatFlux.pas',0,1,205,69,219,1,0
-File_4=SourceModule,'Y:\PROJETS\DELPHI6\MutualiaGRC\concat\ConcatFlux-06-12-2004\FConcatFlux.pas',0,1,79,1,99,0,0
-File_5=SourceModule,'Y:\PROJETS\DELPHI6\ARMORBRE\VISU\FLOGIN.PAS',0,1,1,1,1,1,0
-File_6=SourceModule,'Y:\Outils\Delphi6\Composants\Zeos\src\component\ZAbstractRODataset.pas',0,1,1431,1,1447,0,0
-File_7=SourceModule,'Y:\Outils\Delphi6\Composants\Zeos\src\dbc\ZDbcMySqlUtils.pas',0,1,337,1,361,0,0
-File_8=SourceModule,'Y:\PROJETS\DELPHI6\ARMORBRE\VISU\FVisuArchi.pas',0,1,2873,1,2893,1,0
-File_9=SourceModule,'Y:\PROJETS\DELPHI6\ARMORBRE\VISU\FCodeKrypt.pas',0,1,40,55,56,1,0
+File_0=SourceModule,'C:\delphi\v2.1.2\v2.1.2\Unit1.pas',0,1,991,24,995,1,0
+File_1=SourceModule,'C:\Program Files\Borland\Delphi6\Projects\quickvirprel-v2.1.2.1\v2.1.2.2\Unit1.pas',0,1,1021,66,1048,1,0
+File_2=SourceModule,'c:\program files\borland\delphi6\source\vcl\Mask.pas',0,1,780,1,801,0,0
+File_3=SourceModule,'Y:\Outils\Delphi6\Composants\BZComposants\XPMenu.pas',0,1,3193,1,3220,0,0
+File_4=SourceModule,'Y:\PROJETS\DELPHI6\SUAVE\client\UnitCheckAlert.pas',0,1,52,27,57,0,0
+File_5=SourceModule,'Y:\PROJETS\DELPHI6\MutualiaGRC\concat\ConcatFlux\FConcatFlux.pas',0,1,205,69,219,1,0
+File_6=SourceModule,'Y:\PROJETS\DELPHI6\MutualiaGRC\concat\ConcatFlux-06-12-2004\FConcatFlux.pas',0,1,79,1,99,0,0
+File_7=SourceModule,'Y:\PROJETS\DELPHI6\ARMORBRE\VISU\FLOGIN.PAS',0,1,1,1,1,1,0
+File_8=SourceModule,'Y:\Outils\Delphi6\Composants\Zeos\src\component\ZAbstractRODataset.pas',0,1,1431,1,1447,0,0
+File_9=SourceModule,'Y:\Outils\Delphi6\Composants\Zeos\src\dbc\ZDbcMySqlUtils.pas',0,1,337,1,361,0,0
 
 [Modules]
-Module0=C:\Program Files\Borland\Delphi6\Projects\quickvirprel-v2.1.2.1\v2.1.2.2\Unit1.pas
+Module0=C:\delphi\v2.1.2.3\Unit1.pas
 Module1=C:\Program Files\Borland\Delphi6\Projects\quickvirprel-v2.1.2.1\v2.1.2.2\UnitDestinataire.pas
 Module2=C:\Program Files\Borland\Delphi6\Projects\quickvirprel-v2.1.2.1\v2.1.2.2\UnitEmetteur.pas
 Count=3
 EditWindowCount=1
 
-[C:\Program Files\Borland\Delphi6\Projects\quickvirprel-v2.1.2.1\v2.1.2.2\Unit1.pas]
+[C:\delphi\v2.1.2.3\Unit1.pas]
 ModuleType=SourceModule
 FormState=1
 FormOnTop=0
@@ -25,24 +25,24 @@ FormOnTop=0
 [C:\Program Files\Borland\Delphi6\Projects\quickvirprel-v2.1.2.1\v2.1.2.2\UnitDestinataire.pas]
 ModuleType=SourceModule
 FormState=1
-FormOnTop=0
+FormOnTop=1
 
 [C:\Program Files\Borland\Delphi6\Projects\quickvirprel-v2.1.2.1\v2.1.2.2\UnitEmetteur.pas]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
-[C:\Program Files\Borland\Delphi6\Projects\ProjectGroup1.bpg]
+[C:\delphi\v2.1.2.3\ProjectGroup1.bpg]
 FormState=0
 FormOnTop=0
 
-[C:\Program Files\Borland\Delphi6\Projects\quickvirprel-v2.1.2.1\v2.1.2.2\Project1.dpr]
+[C:\delphi\v2.1.2.3\Project1.dpr]
 FormState=0
 FormOnTop=0
 
 [EditWindow0]
 ViewCount=3
-CurrentView=0
+CurrentView=1
 View0=0
 View1=1
 View2=2
@@ -67,20 +67,20 @@ LeftPanelData=000004000000000000000000000000000000000000000000000100000000000000
 RightPanelSize=0
 BottomPanelSize=0
 BottomPanelClients=MessageView@EditWindow0
-BottomPanelData=00000400010000000B0000004D65737361676556696577000500000000000002340000000000000001000000000000000000000000010000000000050000000000000100000000000500000B0000004D65737361676556696577FFFFFFFF
+BottomPanelData=00000400010000000B0000004D6573736167655669657700050000000000000234000000000000000100000000000000000000000001000000000005000000000000FFFFFFFF
 
 [View0]
-Module=C:\Program Files\Borland\Delphi6\Projects\quickvirprel-v2.1.2.1\v2.1.2.2\Unit1.pas
-CursorX=31
-CursorY=3569
-TopLine=3621
+Module=C:\Program Files\Borland\Delphi6\Projects\quickvirprel-v2.1.2.1\v2.1.2.2\UnitDestinataire.pas
+CursorX=1
+CursorY=1
+TopLine=1
 LeftCol=1
 
 [View1]
-Module=C:\Program Files\Borland\Delphi6\Projects\quickvirprel-v2.1.2.1\v2.1.2.2\UnitDestinataire.pas
-CursorX=23
-CursorY=309
-TopLine=284
+Module=C:\delphi\v2.1.2.3\Unit1.pas
+CursorX=37
+CursorY=1032
+TopLine=1028
 LeftCol=1
 
 [View2]
@@ -175,7 +175,7 @@ ClientHeight=60
 
 [PropertyInspector]
 Create=1
-Visible=1
+Visible=0
 State=0
 Left=2
 Top=385
@@ -190,7 +190,7 @@ LRDockWidth=229
 Dockable=1
 SplitPos=108
 ArrangeBy=Name
-SelectedItem=OnClick
+SelectedItem=Caption
 ExpandedItems=BorderIcons,Connection,Effects,Options,VisibleButtons
 HiddenCategories=
 

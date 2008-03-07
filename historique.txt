@@ -1,5 +1,8 @@
 HISTORIQUE DES VERSIONS DE QUICKVIRPREL
 =======================================
+version 2.1.2.3 : (17/03/2008)
+  - conversion des chiffres dans les numéros de compte alors qu'il ne faut pas,
+
 version 2.1.2.2 : (06/02/2008)
   - possibiliter d'exporter et d'importer les destinataires vers/depuis un fichier csv,
 
